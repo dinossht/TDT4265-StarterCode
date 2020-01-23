@@ -72,7 +72,7 @@ class BinaryModel:
         # input: x
         # dim(grad) = dim(w) = 785
         N = targets.shape[0]
-        self.grad = -X.T@(targets-outputs) / N
+        self.grad = (-X.T@(targets-outputs)+self.l2_reg_lambda*2*self.w) / N
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
         
