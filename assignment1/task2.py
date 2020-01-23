@@ -124,6 +124,9 @@ plt.legend()
 plt.savefig("binary_train_accuracy.png")
 plt.show()
 
+# Plot the length of the weight vector (L2-norm) for each lamda
+print("L2-norm(w):",np.linalg.norm(model.w))
+
 # Reshape weights to image 2 d)
 plt.imshow(np.reshape(np.array(model.w[0:28**2]),(28,28)))
 plt.savefig("weight.png")
