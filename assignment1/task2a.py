@@ -49,8 +49,8 @@ class BinaryModel:
         Returns:
             y: output of model with shape [batch size, 1]
         """
-        # Sigmoid
-        return None
+        # Sigmoid, equation 1 from assignment
+        return np.divide(1,np.exp(-self.w.transpose()@X))
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
