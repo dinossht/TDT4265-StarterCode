@@ -64,6 +64,13 @@ class BinaryModel:
         self.grad = np.zeros_like(self.w)
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
+        
+        # Equation 4 from assignment for single layer NN
+        # outputs: y_hat
+        # targets/labels: y
+        # input: x
+        # dim(grad) = dim(w) = 785
+        self.grad = -X.transpose()@(targets-outputs)
 
     def zero_grad(self) -> None:
         self.grad = None
