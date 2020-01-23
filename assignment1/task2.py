@@ -71,6 +71,11 @@ validation_percentage = 0.1
 X_train, Y_train, X_val, Y_val, X_test, Y_test = utils.load_binary_dataset(
     category1, category2, validation_percentage)
 
+# Preprocess dataset
+X_train = pre_process_images(X_train)    
+X_test  = pre_process_images(X_test)
+X_val   = pre_process_images(X_val)
+
 # hyperparameters
 num_epochs = 50
 learning_rate = 0.2
