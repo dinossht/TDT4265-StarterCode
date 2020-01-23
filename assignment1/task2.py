@@ -123,3 +123,8 @@ utils.plot_loss(val_accuracy, "Validation Accuracy")
 plt.legend()
 plt.savefig("binary_train_accuracy.png")
 plt.show()
+
+# Reshape weights to image 2 d)
+plt.imshow(np.reshape(np.array(model.w[0:28**2]),(28,28)))
+plt.savefig("weight.png")
+plt.show()
