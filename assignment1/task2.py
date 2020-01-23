@@ -15,8 +15,10 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
         Accuracy (float)
     """
     # Task 2c
-    accuracy = 0.0
-    return accuracy
+    tot_preds = X.shape[0]  # total number of predictions
+    abs_error = abs(targets-model.forward(X).round())  # abs error between target and prediction
+    accuracy = (tot_preds-np.sum(abs_error))/tot_preds 
+    return accuracy  
 
 
 def train(
