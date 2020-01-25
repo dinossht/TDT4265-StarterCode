@@ -56,7 +56,7 @@ class SoftmaxModel:
         # Equation 9 from assignment
         N = targets.shape[0]
         K = targets.shape[1]
-        self.grad = (-1.0/(K*N))*X.T@(targets-outputs)
+        self.grad = (-1.0/(K*N))*X.T@(targets-outputs)+self.l2_reg_lambda*2*self.w
         assert self.grad.shape == self.w.shape,\
              f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
 
