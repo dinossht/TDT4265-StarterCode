@@ -1,9 +1,11 @@
 import numpy as np
 import utils
+import sys 
 import matplotlib.pyplot as plt
 from task2a import cross_entropy_loss, BinaryModel, pre_process_images
 np.random.seed(0)
 
+INT_MAX = sys.maxsize 
 
 def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -> float: 
     """
@@ -16,8 +18,8 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
     """
     # Task 2c
     tot_preds = X.shape[0]  # total number of predictions
-    abs_error = abs(targets-model.forward(X).round())  # abs error between target and prediction
-    accuracy = (tot_preds-np.sum(abs_error))/tot_preds 
+    num_errors = np.sum(abs(targets-model.forward(X).round()))  # abs error between target and prediction
+    accuracy = (tot_preds-num_errors)/tot_preds 
     return accuracy  
 
 
@@ -40,6 +42,10 @@ def train(
     train_accuracy = {}
     val_accuracy = {}
     model = BinaryModel(l2_reg_lambda)
+
+    # Early stopping var init
+    last_loss = INT_MAX 
+    already_failed = 0
 
     global_step = 0
     for epoch in range(num_epochs):
@@ -67,6 +73,17 @@ def train(
                 val_accuracy[global_step] = calculate_accuracy(
                     X_val, Y_val, model)
 
+                # Early stopping criteria    
+                if(_val_loss[0,0]>last_loss and already_failed>5):
+                    # Stop early
+                    print("Early stopping kicked in...")
+                    return model, train_loss, val_loss, train_accuracy, val_accuracy
+                elif(_val_loss[0,0]>last_loss): # Means failed this round but not consistently
+                    already_failed += 1
+                else: 
+                    last_loss = _val_loss[0,0] # The loss was an improvement and I save it
+                    already_failed = 0
+
             global_step += 1
     return model, train_loss, val_loss, train_accuracy, val_accuracy
 
@@ -86,7 +103,7 @@ X_val   = pre_process_images(X_val)
 num_epochs = 50
 learning_rate = 0.2
 batch_size = 128
-l2_reg_lambda = 0
+l2_reg_lambda = 0  # [0 1.0, 0.1, 0.01, 0.001]
 model, train_loss, val_loss, train_accuracy, val_accuracy = train(
     num_epochs=num_epochs,
     learning_rate=learning_rate,
