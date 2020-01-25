@@ -127,3 +127,25 @@ utils.plot_loss(val_accuracy, "Validation Accuracy")
 plt.legend()
 plt.savefig("softmax_train_accuracy.png")
 plt.show()
+
+# Loop through different lamda values
+lamda = [0, 0.1]
+f = plt.figure(figsize=(10,2))
+for i in range(2):
+    l2_reg_lambda = lamda[i]  
+    model, train_loss, val_loss, train_accuracy, val_accuracy = train(
+        num_epochs=num_epochs,
+        learning_rate=learning_rate,
+        batch_size=batch_size,
+        l2_reg_lambda=l2_reg_lambda)
+
+    print("Validation accuracy:", calculate_accuracy(X_val, Y_val, model))
+
+    # Reshape weights to image 2 d)
+    for j in range(10):
+        ax = f.add_subplot(2,10,10*i+j+1)
+        ax.imshow(np.reshape(np.array(model.w[0:28**2,j]),(28,28)),cmap='gray')
+
+plt.tight_layout()
+plt.savefig('softmax_weight.png')
+plt.show()        
