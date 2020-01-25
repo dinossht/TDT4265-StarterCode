@@ -57,7 +57,7 @@ def train(
 
             # The mini-batch gradient descent algorithm for m batches and a single epoch. 
             model.backward(X_batch,model.forward(X_batch),Y_batch)
-            model.w = model.w-(learning_rate/batch_size)*model.grad
+            model.w = model.w-learning_rate*model.grad
 
             # Track training loss continuously
             _train_loss = cross_entropy_loss(Y_batch,model.forward(X_batch))
@@ -76,7 +76,7 @@ def train(
                 # Early stopping criteria    
                 if(_val_loss[0,0]>last_loss and already_failed>5):
                     # Stop early
-                    print("Early stopping kicked in...")
+                    print("Early stopping kicked in at epoch nr.:",epoch+1)
                     return model, train_loss, val_loss, train_accuracy, val_accuracy
                 elif(_val_loss[0,0]>last_loss): # Means failed this round but not consistently
                     already_failed += 1
@@ -100,7 +100,7 @@ X_test  = pre_process_images(X_test)
 X_val   = pre_process_images(X_val)
 
 # hyperparameters
-num_epochs = 50
+num_epochs = 500
 learning_rate = 0.2
 batch_size = 128
 l2_reg_lambda = 0  # [0 1.0, 0.1, 0.01, 0.001]
@@ -124,7 +124,7 @@ print("Test accuracy:", calculate_accuracy(X_test, Y_test, model))
 
 
 # Plot loss
-#plt.ylim([0., .4]) 
+plt.ylim([0., .4]) 
 utils.plot_loss(train_loss, "Training Loss")
 utils.plot_loss(val_loss, "Validation Loss")
 plt.legend()
@@ -133,7 +133,7 @@ plt.show()
 
 
 # Plot accuracy
-#plt.ylim([0.93, .99])
+plt.ylim([0.93, .99])
 utils.plot_loss(train_accuracy, "Training Accuracy")
 utils.plot_loss(val_accuracy, "Validation Accuracy")
 
