@@ -15,9 +15,13 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: SoftmaxModel) 
     Returns:
         Accuracy (float)
     """
-    accuracy = 0
-    return accuracy
+    # Task 4c
+    tot_preds = X.shape[0]  # total number of predictions
+    currectly_predicted = np.sum(np.argmax(model.forward(X),1)==np.argmax(targets,1)) 
+    accuracy = currectly_predicted/tot_preds 
+    return accuracy  
 
+# find index of 
 
 def train(
         num_epochs: int,
@@ -45,15 +49,17 @@ def train(
             end = start + batch_size
             X_batch, Y_batch = X_train[start:end], Y_train[start:end]
 
-            _train_loss = 0
-            train_loss[global_step] = _train_loss
+            # The mini-batch gradient descent algorithm for m batches and a single epoch. 
+            model.backward(X_batch,model.forward(X_batch),Y_batch)
+            model.w = model.w-learning_rate*model.grad
             
             # Track training loss continuously
-            _train_loss = 0
+            _train_loss = cross_entropy_loss(Y_batch,model.forward(X_batch))
             train_loss[global_step] = _train_loss
+
             # Track validation loss / accuracy every time we progress 20% through the dataset
             if global_step % num_steps_per_val == 0:
-                _val_loss = 0
+                _val_loss = cross_entropy_loss(Y_val,model.forward(X_val))
                 val_loss[global_step] = _val_loss
 
                 train_accuracy[global_step] = calculate_accuracy(
@@ -106,7 +112,7 @@ print("Final Test accuracy:", calculate_accuracy(X_test, Y_test, model))
 
 
 # Plot loss
-#plt.ylim([0.01, .2])
+plt.ylim([0.01, .2])
 utils.plot_loss(train_loss, "Training Loss")
 utils.plot_loss(val_loss, "Validation Loss")
 plt.legend()
@@ -115,8 +121,9 @@ plt.show()
 
 
 # Plot accuracy
-#plt.ylim([0.8, .95])
+plt.ylim([0.8, .95])
 utils.plot_loss(train_accuracy, "Training Accuracy")
 utils.plot_loss(val_accuracy, "Validation Accuracy")
 plt.legend()
+plt.savefig("softmax_train_accuracy.png")
 plt.show()
