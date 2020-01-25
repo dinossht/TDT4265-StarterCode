@@ -141,9 +141,9 @@ for i in range(2):
 
     print("Validation accuracy:", calculate_accuracy(X_val, Y_val, model))
 
-    # Reshape weights to image 2 d)
     for j in range(10):
         ax = f.add_subplot(2,10,10*i+j+1)
+        # Reshape weights to image 2 d)
         ax.imshow(np.reshape(np.array(model.w[0:28**2,j]),(28,28)),cmap='gray')
 
 plt.tight_layout()
