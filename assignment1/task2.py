@@ -77,7 +77,7 @@ def train(
                 if(_val_loss[0,0]>last_loss and already_failed>5):
                     # Stop early
                     print("Early stopping kicked in at epoch nr.:",epoch+1)
-                    return model, train_loss, val_loss, train_accuracy, val_accuracy
+                    #return model, train_loss, val_loss, train_accuracy, val_accuracy
                 elif(_val_loss[0,0]>last_loss): # Means failed this round but not consistently
                     already_failed += 1
                 else: 
@@ -100,7 +100,7 @@ X_test  = pre_process_images(X_test)
 X_val   = pre_process_images(X_val)
 
 # hyperparameters
-num_epochs = 500
+num_epochs = 50
 learning_rate = 0.2
 batch_size = 128
 l2_reg_lambda = 0  # [0 1.0, 0.1, 0.01, 0.001]
@@ -141,10 +141,45 @@ plt.legend()
 plt.savefig("binary_train_accuracy.png")
 plt.show()
 
-# Plot the length of the weight vector (L2-norm) for each lamda
-print("L2-norm(w):",np.linalg.norm(model.w))
 
-# Reshape weights to image 2 d)
-plt.imshow(np.reshape(np.array(model.w[0:28**2]),(28,28)))
-plt.savefig("weight.png")
+
+# Loop through different lamda values
+lamda = [1.0, 0.1, 0.01, 0.001]
+len_w = [0,0,0,0]
+for i in range(4):
+    l2_reg_lambda = lamda[i]  
+    model, train_loss, val_loss, train_accuracy, val_accuracy = train(
+        num_epochs=num_epochs,
+        learning_rate=learning_rate,
+        batch_size=batch_size,
+        l2_reg_lambda=l2_reg_lambda)
+
+    print("Validation accuracy:", calculate_accuracy(X_val, Y_val, model))
+    
+    plt.figure(10)
+    utils.plot_loss(val_accuracy, "Validation Accuracy")
+
+    # Plot the length of the weight vector (L2-norm) for each lamda
+    len_w[i] = np.linalg.norm(model.w)
+
+    # Reshape weights to image 2 d)
+    plt.figure(12)
+    plt.subplot(1,4,i+1)
+    plt.imshow(np.reshape(np.array(model.w[0:28**2]),(28,28)))
+
+plt.figure(10)    
+plt.ylim([0.93, .99])
+plt.legend(lamda)
+plt.savefig("validatation_accuracy_different_lamdas.png")
+plt.show()
+
+plt.figure(11)
+plt.plot(lamda,len_w)
+plt.xlabel('lamda')
+plt.ylabel('Length of weight vector')
+plt.savefig("L2_norm_vs_lamda.png")
+plt.show()
+
+plt.figure(12)
+plt.savefig('weight.png')
 plt.show()
