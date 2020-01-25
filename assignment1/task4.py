@@ -70,6 +70,15 @@ validation_percentage = 0.1
 X_train, Y_train, X_val, Y_val, X_test, Y_test = utils.load_full_mnist(
     validation_percentage)
 
+# One hot encoding
+Y_train = one_hot_encode(Y_train,10)
+Y_test  = one_hot_encode(Y_test,10)
+Y_val   = one_hot_encode(Y_val,10)
+
+# Preprocess dataset
+X_train = pre_process_images(X_train)    
+X_test  = pre_process_images(X_test)
+X_val   = pre_process_images(X_val)
 
 # Hyperparameters
 num_epochs = 50
