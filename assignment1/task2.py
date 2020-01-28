@@ -78,10 +78,14 @@ def train(
                     # Stop early
                     print("Early stopping kicked in at epoch nr.:",epoch+1)
                     #return model, train_loss, val_loss, train_accuracy, val_accuracy
-                elif(_val_loss[0,0]>last_loss): # Means failed this round but not consistently
+
+                # Means failed this round
+                elif(_val_loss[0,0]>last_loss): 
                     already_failed += 1
+
+                # The loss improved this round, reset counter    
                 else: 
-                    last_loss = _val_loss[0,0] # The loss was an improvement and I save it
+                    last_loss = _val_loss[0,0] 
                     already_failed = 0
 
             global_step += 1
