@@ -23,6 +23,7 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
     return accuracy  
 
 
+early_stopping_step = 0
 def train(
         num_epochs: int,
         learning_rate: float,
@@ -33,7 +34,7 @@ def train(
         Function that implements logistic regression through mini-batch
         gradient descent for the given hyperparameters
     """
-    global X_train, X_val, X_test
+    global X_train, X_val, X_test, early_stopping_step
     # Utility variables
     num_batches_per_epoch = X_train.shape[0] // batch_size
     num_steps_per_val = num_batches_per_epoch // 5
@@ -74,10 +75,12 @@ def train(
                     X_val, Y_val, model)
 
                 # Early stopping criteria    
-                if(_val_loss[0,0]>last_loss and already_failed>5):
+                if(_val_loss[0,0]>last_loss and already_failed>20):
                     # Stop early
-                    print("Early stopping kicked in at epoch nr.:",epoch+1)
+                    #print("Early stopping kicked in at epoch nr.:",epoch+1)
                     #return model, train_loss, val_loss, train_accuracy, val_accuracy
+                    if early_stopping_step == 0:
+                        early_stopping_step = global_step 
 
                 # Means failed this round
                 elif(_val_loss[0,0]>last_loss): 
@@ -131,6 +134,8 @@ print("Test accuracy:", calculate_accuracy(X_test, Y_test, model))
 plt.ylim([0., .4]) 
 utils.plot_loss(train_loss, "Training Loss")
 utils.plot_loss(val_loss, "Validation Loss")
+plt.vlines(early_stopping_step,0,1,label="Early stopping")
+
 plt.legend()
 plt.savefig("binary_train_loss.png")
 plt.show()
@@ -140,6 +145,7 @@ plt.show()
 plt.ylim([0.93, .99])
 utils.plot_loss(train_accuracy, "Training Accuracy")
 utils.plot_loss(val_accuracy, "Validation Accuracy")
+plt.vlines(early_stopping_step,0,1,label="Early stopping")
 
 plt.legend()
 plt.savefig("binary_train_accuracy.png")

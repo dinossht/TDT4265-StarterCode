@@ -30,7 +30,6 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     
     # Equation 3 from assignment
-    #return -np.mean
     N = targets.shape[0]   
     return (-1.0/N)*((targets.T@np.log(outputs))+((1.0-targets.T)@np.log(1.0-outputs)))
 
