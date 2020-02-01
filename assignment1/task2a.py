@@ -87,7 +87,7 @@ def gradient_approximation_test(model: BinaryModel, X: np.ndarray, Y: np.ndarray
         Details about this test is given in the appendix in the assignment.
     """
     w_orig = model.w.copy()
-    epsilon = 10e-2
+    epsilon = 1e-2
     for i in range(w_orig.shape[0]):
         orig = model.w[i].copy()
         model.w[i] = orig + epsilon

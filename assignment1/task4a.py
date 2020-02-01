@@ -83,7 +83,7 @@ def gradient_approximation_test(model: SoftmaxModel, X: np.ndarray, Y: np.ndarra
         Numerical approximation for gradients. Should not be edited. 
         Details about this test is given in the appendix in the assignment.
     """
-    epsilon = 10e-2
+    epsilon = 1e-2
     for i in range(model.w.shape[0]):
         for j in range(model.w.shape[1]):    
             orig = model.w[i, j].copy()
