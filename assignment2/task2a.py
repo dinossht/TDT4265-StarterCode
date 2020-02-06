@@ -46,7 +46,7 @@ class SoftmaxModel:
                  use_improved_weight_init: bool  # Task 3c hyperparameter
                  ):
         # Define number of input nodes
-        self.I = None
+        self.I = 785
         self.use_improved_sigmoid = use_improved_sigmoid
 
         # Define number of output nodes
@@ -72,7 +72,10 @@ class SoftmaxModel:
         Returns:
             y: output of model with shape [batch size, num_outputs]
         """
-        return None
+        # Equation 6 from assignment 1
+        y_hat = np.exp(X@self.ws[0]@self.ws[1])
+        # Normalize 
+        return y_hat / np.sum(y_hat, axis=1, keepdims=True)
 
     def backward(self, X: np.ndarray, outputs: np.ndarray,
                  targets: np.ndarray) -> None:
