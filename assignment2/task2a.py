@@ -13,7 +13,10 @@ def pre_process_images(X: np.ndarray):
     """
     assert X.shape[1] == 784,\
         f"X.shape[1]: {X.shape[1]}, should be 784"
-    return X
+
+    # Normalize from [0,255] to [0,1]
+    # Append 1 at the end (bias trick)
+    return np.append(X / 255.0, np.ones((X.shape[0], 1)), axis=1)
 
 
 def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
@@ -26,8 +29,10 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     """
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
-    raise NotImplementedError
-
+    # Not normalize by K! It will lead to gradients being much smaller
+    ce = targets * np.log(outputs)
+    N = targets.shape[0] 
+    return (-1.0 / N) * np.sum(np.sum(ce)) 
 
 class SoftmaxModel:
 
