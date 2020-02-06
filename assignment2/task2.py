@@ -5,6 +5,13 @@ import typing
 from task2a import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
 np.random.seed(0)
 
+# TODO: Early stopping in the training loop. This is not required; 
+# however, early stopping might enable you to stop training early 
+# and save computation time Early stopping.
+# TODO: For each task we have set the hyperparameters (learning 
+# rate and batch size) that should work fine for these tasks. 
+# If you decide to change them, please state it in your report.
+
 
 def calculate_accuracy(X: np.ndarray, targets: np.ndarray,
                        model: SoftmaxModel) -> float:
