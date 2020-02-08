@@ -11,6 +11,9 @@ np.random.seed(0)
 # TODO: For each task we have set the hyperparameters (learning 
 # rate and batch size) that should work fine for these tasks. 
 # If you decide to change them, please state it in your report.
+# NOTE: Note that you should use the same mean and standard 
+# deviation value when you normalize your training set, validation 
+# set, and test set!
 
 
 def calculate_accuracy(X: np.ndarray, targets: np.ndarray,

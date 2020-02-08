@@ -98,7 +98,28 @@ class SoftmaxModel:
             f"Output shape: {outputs.shape}, targets: {targets.shape}"
         # A list of gradients.
         # For example, self.grads[0] will be the gradient for the first hidden layer
+        
+        # Equation 9 from assignmwent 1, but for two layers
+        # Equations calculated in task 1b)
+        # Backpropogate first from output to hidden, and then from hidden to input layer
         self.grads = []
+        w1 = self.ws[0]
+        w2 = self.ws[1]
+        N = targets.shape[0]        
+        
+        # Output layer backpropogation
+        delta_k = -(targets - outputs)
+        z_j = X@w1
+        a_j = sigmoid(z_j)
+        dC_dw2 = (1.0 / N) * a_j.T@delta_k  
+        
+        # Hidden layer backpropogation
+        delta_j = sigmoid_derivative(z_j) * (delta_k@w2.T)
+        dC_dw1 = (1.0 / N) * X.T@delta_j 
+
+        # Update gradient
+        self.grads.append(dC_dw1)
+        self.grads.append(dC_dw2)
 
         for grad, w in zip(self.grads, self.ws):
             assert grad.shape == w.shape,\
