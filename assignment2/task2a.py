@@ -80,9 +80,10 @@ class SoftmaxModel:
         Returns:
             y: output of model with shape [batch size, num_outputs]
         """
-        # Equation 6 from assignment 1
-        y_hat = np.exp(X@self.ws[0]@self.ws[1])
-        # Normalize 
+        # Sigmoid activation for hidden layer
+        hidden_layer = sigmoid(X@self.ws[0])
+        # Softmax for output layer
+        y_hat = np.exp(hidden_layer@self.ws[1])
         return y_hat / np.sum(y_hat, axis=1, keepdims=True)
 
     def backward(self, X: np.ndarray, outputs: np.ndarray,
