@@ -4,6 +4,14 @@ import typing
 np.random.seed(1)
 
 
+def sigmoid(x):
+    return 1.0 / (1.0 + np.exp(-x))
+
+
+def sigmoid_derivative(x):
+    return sigmoid(x) * (1.0 - sigmoid(x))  
+
+
 def pre_process_images(X: np.ndarray):
     """
     Args:
