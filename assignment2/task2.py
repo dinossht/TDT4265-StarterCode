@@ -8,7 +8,7 @@ np.random.seed(0)
 # TODO: Early stopping in the training loop. This is not required; 
 # however, early stopping might enable you to stop training early 
 # and save computation time Early stopping.
-# TODO: For each task we have set the hyperparameters (learning 
+# NOTE: For each task we have set the hyperparameters (learning 
 # rate and batch size) that should work fine for these tasks. 
 # If you decide to change them, please state it in your report.
 
@@ -63,13 +63,13 @@ def train(
             model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
 
             # Track train / validation loss / accuracy
+            _train_loss = cross_entropy_loss(Y_batch, model.forward(X_batch))
+            train_loss[global_step] = _train_loss
+            
             # every time we progress 20% through the dataset
             if (global_step % num_steps_per_val) == 0:
                 _val_loss = cross_entropy_loss(Y_val, model.forward(X_val))
                 val_loss[global_step] = _val_loss
-
-                _train_loss = cross_entropy_loss(Y_batch, model.forward(X_batch))
-                train_loss[global_step] = _train_loss
 
                 train_accuracy[global_step] = calculate_accuracy(
                     X_train, Y_train, model)
