@@ -162,21 +162,25 @@ if __name__ == "__main__":
         # Plot loss
         plt.figure(figsize=(20, 8))
         plt.subplot(1, 2, 1)
-        plt.ylim([0.1, .5])
         utils.plot_loss(train_loss, "Training Loss")
         utils.plot_loss(val_loss, "Validation Loss")
-        plt.xlabel("Number of gradient steps")
-        plt.ylabel("Cross Entropy Loss")
-        plt.legend("Training Loss", "Validation Loss")
         
         # Plot accuracy
         plt.subplot(1, 2, 2)
-        plt.ylim([0.9, 1.0])
         utils.plot_loss(train_accuracy, "Training Accuracy")
         utils.plot_loss(val_accuracy, "Validation Accuracy")
-        plt.legend("Training Accuracy", "Validation Accuracy")
-        plt.xlabel("Number of gradient steps")
-        plt.ylabel("Accuracy")
+
+    plt.subplot(1, 2, 1)
+    plt.ylim([0.1, .5])
+    plt.xlabel("Number of gradient steps")
+    plt.ylabel("Cross Entropy Loss")
+    plt.legend(["Training Loss", "Validation Loss", "Training Loss with shuffle", "Validation Loss with shuffle"])
+
+    plt.subplot(1, 2, 2)
+    plt.ylim([0.9, 1.0])
+    plt.xlabel("Number of gradient steps")
+    plt.ylabel("Accuracy")
+    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with shuffle", "Validation Accuracy with shuffle"])
 
     plt.savefig("task3_softmax_train_graph.png")
     plt.show()
