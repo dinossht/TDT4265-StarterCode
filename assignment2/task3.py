@@ -179,7 +179,7 @@ if __name__ == "__main__":
     
     # Plot loss
     plt.subplot(1, 2, 1)
-    #plt.ylim([0.1, .5])
+    plt.ylim([0, .4])
     
     for run in range(num_runs):
         global_steps = list(train_loss_all[run].keys())
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
-    #plt.ylim([0.9, 1.0])
+    plt.ylim([0.6, 1.0])
     for run in range(num_runs):
         global_steps = list(train_accuracy_all[run].keys())
         loss = list(train_accuracy_all[run].values())
@@ -211,5 +211,5 @@ if __name__ == "__main__":
     plt.ylabel("Accuracy")
     
     # Save and show image
-    plt.savefig("softmax_train_graph.png")
+    plt.savefig("task3_softmax_train_graph.png")
     plt.show()
