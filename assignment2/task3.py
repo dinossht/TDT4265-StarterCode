@@ -109,7 +109,7 @@ if __name__ == "__main__":
     num_epochs = 20
     learning_rate = .1
     batch_size = 32
-    neurons_per_layer = [64, 10]
+    neurons_per_layer = [10, 10]
     momentum_gamma = .9  # Task 3 hyperparameter
 
     # Initialize variables for saving plotting data
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     
     # Plot loss
     plt.subplot(1, 2, 1)
-    plt.ylim([0.1, .5])
+    #plt.ylim([0.1, .5])
     
     for run in range(num_runs):
         global_steps = list(train_loss_all[run].keys())
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
-    plt.ylim([0.9, 1.0])
+    #plt.ylim([0.9, 1.0])
     for run in range(num_runs):
         global_steps = list(train_accuracy_all[run].keys())
         loss = list(train_accuracy_all[run].values())
