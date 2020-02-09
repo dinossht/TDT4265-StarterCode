@@ -11,9 +11,6 @@ np.random.seed(0)
 # TODO: For each task we have set the hyperparameters (learning 
 # rate and batch size) that should work fine for these tasks. 
 # If you decide to change them, please state it in your report.
-# NOTE: Note that you should use the same mean and standard 
-# deviation value when you normalize your training set, validation 
-# set, and test set!
 
 
 def calculate_accuracy(X: np.ndarray, targets: np.ndarray,
@@ -26,7 +23,9 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray,
     Returns:
         Accuracy (float)
     """
-    accuracy = 0
+    tot_preds = X.shape[0]  # total number of predictions
+    currectly_predicted = np.sum(np.argmax(model.forward(X), 1)==np.argmax(targets, 1)) 
+    accuracy = currectly_predicted / tot_preds 
     return accuracy
 
 
