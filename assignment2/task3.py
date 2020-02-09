@@ -112,10 +112,16 @@ if __name__ == "__main__":
     neurons_per_layer = [64, 10]
     momentum_gamma = .9  # Task 3 hyperparameter
 
-    train_loss_all = []
-    val_loss_all = []
+    # Initialize variables for saving plotting data
+    train_loss_all      = []
+    val_loss_all        = []
+    train_accuracy_all  = []
+    val_accuracy_all    = []
+
     num_runs = 2
     for run in range(num_runs):
+        print("Run:", run)
+        
         # Settings for task 3. Keep all to false for task 2.
         use_shuffle = False
         use_improved_sigmoid = False
@@ -164,6 +170,9 @@ if __name__ == "__main__":
         # Save plot data
         train_loss_all.append(train_loss)
         val_loss_all.append(val_loss)
+        train_accuracy_all.append(train_accuracy)
+        val_accuracy_all.append(val_accuracy)
+
 
     fmt = ['-', '+']
     plt.figure(figsize=(20, 8))
@@ -175,6 +184,10 @@ if __name__ == "__main__":
     for run in range(num_runs):
         global_steps = list(train_loss_all[run].keys())
         loss = list(train_loss_all[run].values())
+        plt.plot(global_steps, loss, fmt[run])      
+        
+        global_steps = list(val_loss_all[run].keys())
+        loss = list(val_loss_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
 
     plt.xlabel("Number of gradient steps")
@@ -185,9 +198,13 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.ylim([0.9, 1.0])
     for run in range(num_runs):
-        global_steps = list(train_loss_all[run].keys())
-        loss = list(train_loss_all[run].values())
+        global_steps = list(train_accuracy_all[run].keys())
+        loss = list(train_accuracy_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
+
+        global_steps = list(val_accuracy_all[run].keys())
+        loss = list(val_accuracy_all[run].values())
+        plt.plot(global_steps, loss)
 
     plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with shuffle", "Validation Accuracy with shuffle"])
     plt.xlabel("Number of gradient steps")
