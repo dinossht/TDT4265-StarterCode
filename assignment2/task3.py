@@ -112,6 +112,8 @@ if __name__ == "__main__":
     neurons_per_layer = [64, 10]
     momentum_gamma = .9  # Task 3 hyperparameter
 
+    train_loss_all = []
+    val_loss_all = []
     num_runs = 2
     for run in range(num_runs):
         # Settings for task 3. Keep all to false for task 2.
@@ -159,32 +161,38 @@ if __name__ == "__main__":
         print("Final Test accuracy:",
             calculate_accuracy(X_test, Y_test, model))
 
-        # Plot loss
-        plt.figure(figsize=(20, 8))
-        plt.subplot(1, 2, 1)
-        global_steps = list(train_loss.keys())
-        loss = list(val_loss.values())
-        plt.plot(global_steps, loss, '-')
-        #utils.plot_loss(train_loss, "Training Loss")
-        #utils.plot_loss(val_loss, "Validation Loss")
-        
-        # Plot accuracy
-        plt.subplot(1, 2, 2)
-        global_steps = list(train_loss.keys())
-        loss = list(val_loss.values())
-        plt.plot(global_steps, loss, '-')
+        # Save plot data
+        train_loss_all.append(train_loss)
+        val_loss_all.append(val_loss)
 
+    fmt = ['-', '+']
+    plt.figure(figsize=(20, 8))
+    
+    # Plot loss
     plt.subplot(1, 2, 1)
     plt.ylim([0.1, .5])
+    
+    for run in range(num_runs):
+        global_steps = list(train_loss_all[run].keys())
+        loss = list(train_loss_all[run].values())
+        plt.plot(global_steps, loss, fmt[run])
+
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Cross Entropy Loss")
     plt.legend(["Training Loss", "Validation Loss", "Training Loss with shuffle", "Validation Loss with shuffle"])
-
+    
+    # Plot accuracy
     plt.subplot(1, 2, 2)
     plt.ylim([0.9, 1.0])
+    for run in range(num_runs):
+        global_steps = list(train_loss_all[run].keys())
+        loss = list(train_loss_all[run].values())
+        plt.plot(global_steps, loss, fmt[run])
+
+    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with shuffle", "Validation Accuracy with shuffle"])
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Accuracy")
-    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with shuffle", "Validation Accuracy with shuffle"])
-
-    plt.savefig("task3_softmax_train_graph.png")
+    
+    # Save and show image
+    plt.savefig("softmax_train_graph.png")
     plt.show()
