@@ -112,61 +112,71 @@ if __name__ == "__main__":
     neurons_per_layer = [64, 10]
     momentum_gamma = .9  # Task 3 hyperparameter
 
-    # Settings for task 3. Keep all to false for task 2.
-    use_shuffle = True
-    use_improved_sigmoid = False
-    use_improved_weight_init = False
-    use_momentum = False
+    num_runs = 2
+    for run in range(num_runs):
+        # Settings for task 3. Keep all to false for task 2.
+        use_shuffle = False
+        use_improved_sigmoid = False
+        use_improved_weight_init = False
+        use_momentum = False
 
-    model = SoftmaxModel(
-        neurons_per_layer,
-        use_improved_sigmoid,
-        use_improved_weight_init)
-
-    # Initial the weight to randomly sampled weights between [-1, 1]
-    for layer_idx, w in enumerate(model.ws):
-        model.ws[layer_idx] = np.random.uniform(-1, 1, size=w.shape)
+        if run == 1:
+            use_shuffle = True
+        #elif run == 2:
+        #    use_shuffle = False
+        #    use_improved_sigmoid = True
     
-    model, train_loss, val_loss, train_accuracy, val_accuracy = train(
-        model,
-        [X_train, Y_train, X_val, Y_val, X_test, Y_test],
-        num_epochs=num_epochs,
-        learning_rate=learning_rate,
-        batch_size=batch_size,
-        use_shuffle=use_shuffle,
-        use_momentum=use_momentum,
-        momentum_gamma=momentum_gamma)
+        model = SoftmaxModel(
+            neurons_per_layer,
+            use_improved_sigmoid,
+            use_improved_weight_init)
 
-    print("Final Train Cross Entropy Loss:",
-          cross_entropy_loss(Y_train, model.forward(X_train)))
-    print("Final Validation Cross Entropy Loss:",
-          cross_entropy_loss(Y_val, model.forward(X_val)))
-    print("Final Test Cross Entropy Loss:",
-          cross_entropy_loss(Y_test, model.forward(X_test)))
+        # Initial the weight to randomly sampled weights between [-1, 1]
+        for layer_idx, w in enumerate(model.ws):
+            model.ws[layer_idx] = np.random.uniform(-1, 1, size=w.shape)
+        
+        model, train_loss, val_loss, train_accuracy, val_accuracy = train(
+            model,
+            [X_train, Y_train, X_val, Y_val, X_test, Y_test],
+            num_epochs=num_epochs,
+            learning_rate=learning_rate,
+            batch_size=batch_size,
+            use_shuffle=use_shuffle,
+            use_momentum=use_momentum,
+            momentum_gamma=momentum_gamma)
 
-    print("Final Train accuracy:",
-          calculate_accuracy(X_train, Y_train, model))
-    print("Final Validation accuracy:",
-          calculate_accuracy(X_val, Y_val, model))
-    print("Final Test accuracy:",
-          calculate_accuracy(X_test, Y_test, model))
+        print("Final Train Cross Entropy Loss:",
+            cross_entropy_loss(Y_train, model.forward(X_train)))
+        print("Final Validation Cross Entropy Loss:",
+            cross_entropy_loss(Y_val, model.forward(X_val)))
+        print("Final Test Cross Entropy Loss:",
+            cross_entropy_loss(Y_test, model.forward(X_test)))
 
-    # Plot loss
-    plt.figure(figsize=(20, 8))
-    plt.subplot(1, 2, 1)
-    plt.ylim([0.1, .5])
-    utils.plot_loss(train_loss, "Training Loss")
-    utils.plot_loss(val_loss, "Validation Loss")
-    plt.xlabel("Number of gradient steps")
-    plt.ylabel("Cross Entropy Loss")
-    plt.legend()
-    plt.subplot(1, 2, 2)
-    # Plot accuracy
-    plt.ylim([0.9, 1.0])
-    utils.plot_loss(train_accuracy, "Training Accuracy")
-    utils.plot_loss(val_accuracy, "Validation Accuracy")
-    plt.legend()
-    plt.xlabel("Number of gradient steps")
-    plt.ylabel("Accuracy")
-    plt.savefig("softmax_train_graph.png")
+        print("Final Train accuracy:",
+            calculate_accuracy(X_train, Y_train, model))
+        print("Final Validation accuracy:",
+            calculate_accuracy(X_val, Y_val, model))
+        print("Final Test accuracy:",
+            calculate_accuracy(X_test, Y_test, model))
+
+        # Plot loss
+        plt.figure(figsize=(20, 8))
+        plt.subplot(1, 2, 1)
+        plt.ylim([0.1, .5])
+        utils.plot_loss(train_loss, "Training Loss")
+        utils.plot_loss(val_loss, "Validation Loss")
+        plt.xlabel("Number of gradient steps")
+        plt.ylabel("Cross Entropy Loss")
+        plt.legend("Training Loss", "Validation Loss")
+        
+        # Plot accuracy
+        plt.subplot(1, 2, 2)
+        plt.ylim([0.9, 1.0])
+        utils.plot_loss(train_accuracy, "Training Accuracy")
+        utils.plot_loss(val_accuracy, "Validation Accuracy")
+        plt.legend("Training Accuracy", "Validation Accuracy")
+        plt.xlabel("Number of gradient steps")
+        plt.ylabel("Accuracy")
+
+    plt.savefig("task3_softmax_train_graph.png")
     plt.show()
