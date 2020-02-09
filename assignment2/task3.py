@@ -109,7 +109,7 @@ if __name__ == "__main__":
     num_epochs = 20
     learning_rate = .1
     batch_size = 32
-    neurons_per_layer = [10, 10]
+    neurons_per_layer = [64, 10]
     momentum_gamma = .9  # Task 3 hyperparameter
 
     # Initialize variables for saving plotting data
