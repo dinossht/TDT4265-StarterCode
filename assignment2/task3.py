@@ -123,23 +123,27 @@ if __name__ == "__main__":
         print("Run:", run)
         
         # Settings for task 3. Keep all to false for task 2.
-        use_shuffle = False
-        use_improved_sigmoid = False
-        use_improved_weight_init = False
-        use_momentum = False
+        use_shuffle                 = False
+        use_improved_sigmoid        = False
+        use_improved_weight_init    = False
+        use_momentum                = False
 
         if run == 1:
             #use_shuffle = True
-            use_improved_sigmoid = True
+            use_improved_sigmoid        = True
+            use_improved_weight_init    = True
 
         model = SoftmaxModel(
             neurons_per_layer,
             use_improved_sigmoid,
             use_improved_weight_init)
 
-        # Initial the weight to randomly sampled weights between [-1, 1]
+        # Initial the weight to randomly sampled weights from normal 
+        # distribution with zero mean and standard deviation of 1/sqrt(fan-in)
         for layer_idx, w in enumerate(model.ws):
-            model.ws[layer_idx] = np.random.uniform(-1, 1, size=w.shape)
+            # Fan-in standard deviation
+            sigma = 1.0 / np.sqrt(neurons_per_layer[layer_idx])
+            model.ws[layer_idx] = np.random.normal(mu=0, scale=sigma, size=w.shape)
         
         model, train_loss, val_loss, train_accuracy, val_accuracy = train(
             model,
@@ -190,7 +194,7 @@ if __name__ == "__main__":
 
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Cross Entropy Loss")
-    plt.legend(["Training Loss", "Validation Loss", "Training Loss with improved sigmoid", "Validation Loss with improved sigmoid"])
+    plt.legend(["Training Loss", "Validation Loss", "Training Loss with improved weight init", "Validation Loss with improved weight init"])
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
@@ -204,10 +208,10 @@ if __name__ == "__main__":
         loss = list(val_accuracy_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
 
-    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with improved sigmoid", "Validation Accuracy with improved sigmoid"])
+    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with improved weight init", "Validation Accuracy with improved weight init"])
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Accuracy")
     
     # Save and show image
-    plt.savefig("task3b_softmax_train_graph.png")
+    plt.savefig("task3c_softmax_train_graph.png")
     plt.show()
