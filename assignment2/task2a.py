@@ -6,14 +6,14 @@ np.random.seed(1)
 
 def sigmoid(x, improved_sigmoid=False):
     if improved_sigmoid:
-        return 1.7159 * np.tanh(1.5 * x)
+        return 1.7159 * np.tanh((2.0 / 3.0) * x)
 
     return 1.0 / (1.0 + np.exp(-x))
 
 
 def sigmoid_derivative(x, improved_sigmoid=False):
     if improved_sigmoid:
-        return 1.7159 * 1.5 * (1.0 - np.tanh(1.5 * x)**2) 
+        return 1.14393 / np.cosh((2.0 / 3.0) * x)**2
 
     return sigmoid(x) * (1.0 - sigmoid(x))  
 
