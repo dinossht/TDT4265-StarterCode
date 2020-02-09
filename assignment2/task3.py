@@ -206,7 +206,7 @@ if __name__ == "__main__":
 
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Cross Entropy Loss")
-    plt.legend(["Training Loss", "Validation Loss", "Training Loss with improved weight init", "Validation Loss with improved weight init"])
+    plt.legend(["Training Loss", "Validation Loss", "Training Loss with momentum", "Validation Loss with momentum"])
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
@@ -220,7 +220,7 @@ if __name__ == "__main__":
         loss = list(val_accuracy_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
 
-    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with improved weight init", "Validation Accuracy with improved weight init"])
+    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with momentum", "Validation Accuracy with momentum"])
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Accuracy")
     
