@@ -3,6 +3,7 @@ import utils
 import matplotlib.pyplot as plt
 import typing
 from task2a import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
+from sklearn.utils import shuffle
 np.random.seed(0)
 
 # TODO: Early stopping in the training loop. This is not required; 
@@ -77,6 +78,11 @@ def train(
                     X_val, Y_val, model)
 
             global_step += 1
+
+        if use_shuffle:
+            X_train, Y_train = shuffle(X_train, Y_train)
+
+
     return model, train_loss, val_loss, train_accuracy, val_accuracy
 
 
@@ -107,7 +113,7 @@ if __name__ == "__main__":
     momentum_gamma = .9  # Task 3 hyperparameter
 
     # Settings for task 3. Keep all to false for task 2.
-    use_shuffle = False
+    use_shuffle = True
     use_improved_sigmoid = False
     use_improved_weight_init = False
     use_momentum = False
