@@ -4,11 +4,17 @@ import typing
 np.random.seed(1)
 
 
-def sigmoid(x):
+def sigmoid(x, improved_sigmoid=False):
+    if improved_sigmoid:
+        return 1.7159 * np.tanh(1.5 * x)
+
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def sigmoid_derivative(x):
+def sigmoid_derivative(x, improved_sigmoid=False):
+    if improved_sigmoid:
+        return 1.7159 * 1.5 * (1.0 - np.tanh(1.5 * x)**2) 
+
     return sigmoid(x) * (1.0 - sigmoid(x))  
 
 
@@ -81,7 +87,7 @@ class SoftmaxModel:
             y: output of model with shape [batch size, num_outputs]
         """
         # Sigmoid activation for hidden layer
-        hidden_layer = sigmoid(X@self.ws[0])
+        hidden_layer = sigmoid(X@self.ws[0], improved_sigmoid=self.use_improved_sigmoid)
         # Softmax for output layer
         y_hat = np.exp(hidden_layer@self.ws[1])
         return y_hat / np.sum(y_hat, axis=1, keepdims=True)
@@ -110,11 +116,11 @@ class SoftmaxModel:
         # Output layer backpropogation
         delta_k = -(targets - outputs)
         z_j = X@w1
-        a_j = sigmoid(z_j)
+        a_j = sigmoid(z_j, improved_sigmoid=self.use_improved_sigmoid)
         dC_dw2 = (1.0 / N) * a_j.T@delta_k  
         
         # Hidden layer backpropogation
-        delta_j = sigmoid_derivative(z_j) * (delta_k@w2.T)
+        delta_j = sigmoid_derivative(z_j, improved_sigmoid=self.use_improved_sigmoid) * (delta_k@w2.T)
         dC_dw1 = (1.0 / N) * X.T@delta_j 
 
         # Update gradient

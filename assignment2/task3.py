@@ -129,11 +129,9 @@ if __name__ == "__main__":
         use_momentum = False
 
         if run == 1:
-            use_shuffle = True
-        #elif run == 2:
-        #    use_shuffle = False
-        #    use_improved_sigmoid = True
-    
+            #use_shuffle = True
+            use_improved_sigmoid = True
+
         model = SoftmaxModel(
             neurons_per_layer,
             use_improved_sigmoid,
@@ -192,7 +190,7 @@ if __name__ == "__main__":
 
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Cross Entropy Loss")
-    plt.legend(["Training Loss", "Validation Loss", "Training Loss with shuffle", "Validation Loss with shuffle"])
+    plt.legend(["Training Loss", "Validation Loss", "Training Loss with improved sigmoid", "Validation Loss with improved sigmoid"])
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
@@ -206,10 +204,10 @@ if __name__ == "__main__":
         loss = list(val_accuracy_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
 
-    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with shuffle", "Validation Accuracy with shuffle"])
+    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with improved sigmoid", "Validation Accuracy with improved sigmoid"])
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Accuracy")
     
     # Save and show image
-    plt.savefig("task3_softmax_train_graph.png")
+    plt.savefig("task3b_softmax_train_graph.png")
     plt.show()
