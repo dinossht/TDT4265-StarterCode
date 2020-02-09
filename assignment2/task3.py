@@ -196,7 +196,7 @@ if __name__ == "__main__":
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
-    plt.ylim([0.6, 1.0])
+    plt.ylim([0.8, 1.0])
     for run in range(num_runs):
         global_steps = list(train_accuracy_all[run].keys())
         loss = list(train_accuracy_all[run].values())
