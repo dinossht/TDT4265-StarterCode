@@ -12,7 +12,7 @@ def sigmoid_derivative(x):
     return sigmoid(x) * (1.0 - sigmoid(x))  
 
 
-def pre_process_images(X: np.ndarray):
+def pre_process_images(X: np.ndarray, mean=128, std=50):
     """
     Args:
         X: images of shape [batch size, 784] in the range (0, 255)
@@ -23,8 +23,8 @@ def pre_process_images(X: np.ndarray):
         f"X.shape[1]: {X.shape[1]}, should be 784"
     # Input normalization
     # Normalize using mean and standard deviation 
-    mu      = np.mean(X)
-    sigma   = np.std(X)
+    mu      = mean
+    sigma   = std 
     X_norm  = (X - mu) / sigma
     # Append 1 at the end (bias trick)
     return np.append(X_norm, np.ones((X.shape[0], 1)), axis=1)
