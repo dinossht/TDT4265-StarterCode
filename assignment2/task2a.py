@@ -76,7 +76,7 @@ class SoftmaxModel:
             w_shape = (prev, size)
             print("Initializing weight to shape:", w_shape)
             # Initialize the weight to randomly sampled weight between [-1, 1]
-            w = np.random.uniform(-1, 1, size=w.shape)
+            w = np.random.uniform(-1, 1, size=w_shape)
             
             if self.use_improved_sigmoid:
                 # Fan-in standard deviation
