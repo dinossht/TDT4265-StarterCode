@@ -68,13 +68,16 @@ class SoftmaxModel:
         # A hidden layer with 64 neurons and a output layer with 10 neurons.
         self.neurons_per_layer = neurons_per_layer
 
-        # Initialize the weights
+        # Initial the weight to randomly sampled weights from normal 
+        # distribution with zero mean and standard deviation of 1/sqrt(fan-in)
         self.ws = []
         prev = self.I
         for size in self.neurons_per_layer:
             w_shape = (prev, size)
             print("Initializing weight to shape:", w_shape)
-            w = np.zeros(w_shape)
+            # Fan-in standard deviation
+            sigma = 1.0 / np.sqrt(size)
+            w = np.random.normal(loc=0, scale=sigma, size=w_shape)
             self.ws.append(w)
             prev = size
         self.grads = [None for i in range(len(self.ws))]

@@ -137,13 +137,6 @@ if __name__ == "__main__":
             neurons_per_layer,
             use_improved_sigmoid,
             use_improved_weight_init)
-
-        # Initial the weight to randomly sampled weights from normal 
-        # distribution with zero mean and standard deviation of 1/sqrt(fan-in)
-        for layer_idx, w in enumerate(model.ws):
-            # Fan-in standard deviation
-            sigma = 1.0 / np.sqrt(neurons_per_layer[layer_idx])
-            model.ws[layer_idx] = np.random.normal(loc=0, scale=sigma, size=w.shape)
         
         model, train_loss, val_loss, train_accuracy, val_accuracy = train(
             model,
