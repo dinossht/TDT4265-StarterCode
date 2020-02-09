@@ -60,8 +60,14 @@ def train(
 
             # The mini-batch gradient descent algorithm
             model.backward(X_batch, model.forward(X_batch), Y_batch)
-            model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
-            model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
+
+            if use_momentum:
+                # Adaptive learning rate using momentum
+                model.ws[1] = model.ws[1] - (learning_rate * model.grads[1] + momentum_gamma * model.ws[1])
+                model.ws[0] = model.ws[0] - (learning_rate * model.grads[0] + momentum_gamma * model.ws[0])
+            else:
+                model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
+                model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
 
             # Track train / validation loss / accuracy
             # every time we progress 20% through the dataset
@@ -79,9 +85,9 @@ def train(
 
             global_step += 1
 
+        # Training data shuffling
         if use_shuffle:
             X_train, Y_train = shuffle(X_train, Y_train)
-
 
     return model, train_loss, val_loss, train_accuracy, val_accuracy
 
@@ -107,10 +113,10 @@ if __name__ == "__main__":
 
     # Hyperparameters
     num_epochs = 20
-    learning_rate = .1
+    learning_rate = .02
     batch_size = 32
     neurons_per_layer = [64, 10]
-    momentum_gamma = .9  # Task 3 hyperparameter
+    momentum_gamma = 0.9  # Task 3 hyperparameter
 
     # Initialize variables for saving plotting data
     train_loss_all      = []
@@ -129,9 +135,14 @@ if __name__ == "__main__":
         use_momentum                = False
 
         if run == 1:
+            # task 3a)    
             #use_shuffle = True
-            use_improved_sigmoid        = True
-            use_improved_weight_init    = True
+            # task 3b)
+            #use_improved_sigmoid        = True
+            # task 3c)
+            #use_improved_weight_init    = True
+            # task 3d)
+            use_momentum = True
 
         model = SoftmaxModel(
             neurons_per_layer,
