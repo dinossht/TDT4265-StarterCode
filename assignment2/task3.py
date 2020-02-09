@@ -143,7 +143,7 @@ if __name__ == "__main__":
         for layer_idx, w in enumerate(model.ws):
             # Fan-in standard deviation
             sigma = 1.0 / np.sqrt(neurons_per_layer[layer_idx])
-            model.ws[layer_idx] = np.random.normal(mu=0, scale=sigma, size=w.shape)
+            model.ws[layer_idx] = np.random.normal(loc=0, scale=sigma, size=w.shape)
         
         model, train_loss, val_loss, train_accuracy, val_accuracy = train(
             model,
