@@ -51,6 +51,10 @@ def train(
     train_accuracy = {}
     val_accuracy = {}
 
+    # Initialize prev weights for momentum based learning rate update
+    prev_w1 = 0
+    prev_w2 = 0
+
     global_step = 0
     for epoch in range(num_epochs):
         for step in range(num_batches_per_epoch):
@@ -63,8 +67,12 @@ def train(
 
             if use_momentum:
                 # Adaptive learning rate using momentum
-                model.ws[1] = model.ws[1] - (learning_rate * model.grads[1] + momentum_gamma * model.ws[1])
-                model.ws[0] = model.ws[0] - (learning_rate * model.grads[0] + momentum_gamma * model.ws[0])
+                delta_w2 = model.ws[1] - prev_w2
+                delta_w1 = model.ws[0] - prev_w1
+                model.ws[1] = model.ws[1] - learning_rate * model.grads[1] + momentum_gamma * delta_w2
+                model.ws[0] = model.ws[0] - learning_rate * model.grads[0] + momentum_gamma * delta_w1
+                prev_w2 = model.ws[1]
+                prev_w1 = model.ws[0]
             else:
                 model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
                 model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
@@ -217,5 +225,5 @@ if __name__ == "__main__":
     plt.ylabel("Accuracy")
     
     # Save and show image
-    plt.savefig("task3c_softmax_train_graph.png")
+    plt.savefig("task3d_softmax_train_graph.png")
     plt.show()
