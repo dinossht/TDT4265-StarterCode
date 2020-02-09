@@ -51,9 +51,9 @@ def train(
     train_accuracy = {}
     val_accuracy = {}
 
-    # Initialize prev weights for momentum based learning rate update
-    prev_w1 = 0
-    prev_w2 = 0
+    # Initialize delta weights for momentum based learning rate update
+    delta_w1 = 0
+    delta_w2 = 0
 
     global_step = 0
     for epoch in range(num_epochs):
@@ -67,12 +67,10 @@ def train(
 
             if use_momentum:
                 # Adaptive learning rate using momentum
-                delta_w2 = model.ws[1] - prev_w2
-                delta_w1 = model.ws[0] - prev_w1
-                model.ws[1] = model.ws[1] - learning_rate * model.grads[1] + momentum_gamma * delta_w2
-                model.ws[0] = model.ws[0] - learning_rate * model.grads[0] + momentum_gamma * delta_w1
-                prev_w2 = model.ws[1]
-                prev_w1 = model.ws[0]
+                delta_w2 = learning_rate * model.grads[1] + momentum_gamma * delta_w2
+                delta_w1 = learning_rate * model.grads[0] + momentum_gamma * delta_w1
+                model.ws[1] = model.ws[1] - delta_w2
+                model.ws[0] = model.ws[0] - delta_w1
             else:
                 model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
                 model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
