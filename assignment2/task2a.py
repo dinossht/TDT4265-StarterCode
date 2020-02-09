@@ -137,7 +137,7 @@ def one_hot_encode(Y: np.ndarray, num_classes: int):
     Returns:
         Y: shape [Num examples, num classes]
     """
-    encoded_Y = np.zeros((len(Y),num_classes))  
+    encoded_Y = np.zeros((len(Y), num_classes))  
     for i in range(len(Y)):
         encoded_Y[i, int(Y[i])] = 1
     return encoded_Y

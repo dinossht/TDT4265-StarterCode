@@ -60,7 +60,8 @@ def train(
 
             # The mini-batch gradient descent algorithm
             model.backward(X_batch, model.forward(X_batch), Y_batch)
-            model.ws = model.ws - learning_rate * np.array(model.grads)
+            model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
+            model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
 
             # Track train / validation loss / accuracy
             # every time we progress 20% through the dataset
