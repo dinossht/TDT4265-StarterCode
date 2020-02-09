@@ -162,13 +162,17 @@ if __name__ == "__main__":
         # Plot loss
         plt.figure(figsize=(20, 8))
         plt.subplot(1, 2, 1)
-        utils.plot_loss(train_loss, "Training Loss")
-        utils.plot_loss(val_loss, "Validation Loss")
+        global_steps = list(train_loss.keys())
+        loss = list(val_loss.values())
+        plt.plot(global_steps, loss, '-')
+        #utils.plot_loss(train_loss, "Training Loss")
+        #utils.plot_loss(val_loss, "Validation Loss")
         
         # Plot accuracy
         plt.subplot(1, 2, 2)
-        utils.plot_loss(train_accuracy, "Training Accuracy")
-        utils.plot_loss(val_accuracy, "Validation Accuracy")
+        global_steps = list(train_loss.keys())
+        loss = list(val_loss.values())
+        plt.plot(global_steps, loss, '-')
 
     plt.subplot(1, 2, 1)
     plt.ylim([0.1, .5])
