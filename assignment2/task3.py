@@ -204,7 +204,7 @@ if __name__ == "__main__":
 
         global_steps = list(val_accuracy_all[run].keys())
         loss = list(val_accuracy_all[run].values())
-        plt.plot(global_steps, loss)
+        plt.plot(global_steps, loss, fmt[run])
 
     plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with shuffle", "Validation Accuracy with shuffle"])
     plt.xlabel("Number of gradient steps")
