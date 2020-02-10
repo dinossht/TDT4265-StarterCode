@@ -150,7 +150,8 @@ if __name__ == "__main__":
             #use_improved_weight_init    = True
             # task 3d)
             #use_momentum = True
-            neurons_per_layer[0] = 128
+            # task 4a,b)
+            #neurons_per_layer[0] = 128
         
         model = SoftmaxModel(
             neurons_per_layer,
@@ -225,5 +226,5 @@ if __name__ == "__main__":
     plt.ylabel("Accuracy")
     
     # Save and show image
-    plt.savefig("task4b_softmax_train_graph.png")
+    plt.savefig("task4c_softmax_train_graph.png")
     plt.show()

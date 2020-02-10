@@ -96,8 +96,13 @@ class SoftmaxModel:
         """
         # Sigmoid activation for hidden layer
         hidden_layer = sigmoid(X@self.ws[0], improved_sigmoid=self.use_improved_sigmoid)
+        # Loop through all the hidden layers
+        for layer_num in range(1, len(self.neurons_per_layer) - 1):
+            hidden_layer = sigmoid(hidden_layer@self.ws[layer_num], improved_sigmoid=self.use_improved_sigmoid)
+        
         # Softmax for output layer
-        y_hat = np.exp(hidden_layer@self.ws[1])
+        y_hat = np.exp(hidden_layer@self.ws[-1])
+
         return y_hat / np.sum(y_hat, axis=1, keepdims=True)
 
     def backward(self, X: np.ndarray, outputs: np.ndarray,
