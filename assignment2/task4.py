@@ -52,8 +52,8 @@ def train(
     val_accuracy = {}
 
     # Initialize delta weights for momentum based learning rate update
-    delta_w1 = 0
-    delta_w2 = 0
+    num_layers = len(model.neurons_per_layer)
+    delta = num_layers * [None]
 
     global_step = 0
     for epoch in range(num_epochs):
@@ -68,16 +68,15 @@ def train(
             if use_momentum:
                 # Adaptive learning rate using momentum
                 # based on: https://gluon.mxnet.io/chapter06_optimization/momentum-scratch.html
-                delta_w3 = learning_rate * model.grads[2] + momentum_gamma * delta_w3
-                delta_w2 = learning_rate * model.grads[1] + momentum_gamma * delta_w2
-                delta_w1 = learning_rate * model.grads[0] + momentum_gamma * delta_w1
-                model.ws[2] = model.ws[2] - delta_w3
-                model.ws[1] = model.ws[1] - delta_w2
-                model.ws[0] = model.ws[0] - delta_w1
+                
+                for i in range(num_layers):
+                    idx = num_layers - i - 1
+                    delta[idx] = learning_rate * model.grads[idx] + momentum_gamma * delta[idx]
+                    model.ws[idx] = model.ws[idx] - delta[idx]
             else:
-                model.ws[2] = model.ws[2] - learning_rate * model.grads[2]
-                model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
-                model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
+                for i in range(num_layers):
+                    idx = num_layers - i - 1
+                    model.ws[idx] = model.ws[idx] - learning_rate * model.grads[idx]
 
             # Track train / validation loss / accuracy
             # every time we progress 20% through the dataset
@@ -144,7 +143,7 @@ if __name__ == "__main__":
         use_improved_weight_init    = False
         use_momentum                = False
 
-        if run == 1:
+        #if run == 1:
             # task 3a)    
             #use_shuffle = True
             # task 3b)
