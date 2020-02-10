@@ -12,7 +12,7 @@ np.random.seed(0)
 # NOTE: For each task we have set the hyperparameters (learning 
 # rate and batch size) that should work fine for these tasks. 
 # If you decide to change them, please state it in your report.
-
+# TODO: Fix weight update for arbitrary number of hidden layers, task 4c) 
 
 def calculate_accuracy(X: np.ndarray, targets: np.ndarray,
                        model: SoftmaxModel) -> float:
