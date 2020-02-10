@@ -68,11 +68,14 @@ def train(
             if use_momentum:
                 # Adaptive learning rate using momentum
                 # based on: https://gluon.mxnet.io/chapter06_optimization/momentum-scratch.html
+                delta_w3 = learning_rate * model.grads[2] + momentum_gamma * delta_w3
                 delta_w2 = learning_rate * model.grads[1] + momentum_gamma * delta_w2
                 delta_w1 = learning_rate * model.grads[0] + momentum_gamma * delta_w1
+                model.ws[2] = model.ws[2] - delta_w3
                 model.ws[1] = model.ws[1] - delta_w2
                 model.ws[0] = model.ws[0] - delta_w1
             else:
+                model.ws[2] = model.ws[2] - learning_rate * model.grads[2]
                 model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
                 model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
 
