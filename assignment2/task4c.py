@@ -1,6 +1,6 @@
 import numpy as np
 import utils
-from task2a import one_hot_encode, pre_process_images, SoftmaxModel, gradient_approximation_test
+from task2a_v2 import one_hot_encode, pre_process_images, SoftmaxModel, gradient_approximation_test
 
 
 if __name__ == "__main__":
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     use_improved_sigmoid = True
     use_improved_weight_init = True
     model = SoftmaxModel(
-        neurons_per_layer, use_improved_sigmoid, use_improved_weight_init)
+        neurons_per_layer, use_improved_sigmoid, use_improved_weight_init, 0)
 
     # Gradient approximation check for 100 images
     X_train = X_train[:100]
