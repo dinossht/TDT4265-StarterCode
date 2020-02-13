@@ -5,6 +5,13 @@ import typing
 from task2a import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
 np.random.seed(0)
 
+# TODO: Early stopping in the training loop. This is not required; 
+# however, early stopping might enable you to stop training early 
+# and save computation time Early stopping.
+# NOTE: For each task we have set the hyperparameters (learning 
+# rate and batch size) that should work fine for these tasks. 
+# If you decide to change them, please state it in your report.
+
 
 def calculate_accuracy(X: np.ndarray, targets: np.ndarray,
                        model: SoftmaxModel) -> float:
@@ -16,7 +23,9 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray,
     Returns:
         Accuracy (float)
     """
-    accuracy = 0
+    tot_preds = X.shape[0]  # total number of predictions
+    currectly_predicted = np.sum(np.argmax(model.forward(X), 1)==np.argmax(targets, 1)) 
+    accuracy = currectly_predicted / tot_preds 
     return accuracy
 
 
@@ -48,14 +57,19 @@ def train(
             end = start + batch_size
             X_batch, Y_batch = X_train[start:end], Y_train[start:end]
 
+            # The mini-batch gradient descent algorithm
+            model.backward(X_batch, model.forward(X_batch), Y_batch)
+            model.ws[1] = model.ws[1] - learning_rate * model.grads[1]
+            model.ws[0] = model.ws[0] - learning_rate * model.grads[0]
+
             # Track train / validation loss / accuracy
             # every time we progress 20% through the dataset
             if (global_step % num_steps_per_val) == 0:
-                _val_loss = 0
-                val_loss[global_step] = _val_loss
-
-                _train_loss = 0
+                _train_loss = cross_entropy_loss(Y_train, model.forward(X_train))
                 train_loss[global_step] = _train_loss
+
+                _val_loss = cross_entropy_loss(Y_val, model.forward(X_val))
+                val_loss[global_step] = _val_loss
 
                 train_accuracy[global_step] = calculate_accuracy(
                     X_train, Y_train, model)
@@ -71,6 +85,19 @@ if __name__ == "__main__":
     validation_percentage = 0.2
     X_train, Y_train, X_val, Y_val, X_test, Y_test = utils.load_full_mnist(
         validation_percentage)
+
+    # One hot encode data
+    Y_train = one_hot_encode(Y_train, 10)
+    Y_val   = one_hot_encode(Y_val, 10)
+    Y_test  = one_hot_encode(Y_test, 10)
+
+    # Preprocess data using mean and std of training set
+    # Find mean and std of training set
+    mu      = np.mean(X_train)
+    sigma   = np.std(X_train)
+    X_train = pre_process_images(X_train, mean=mu, std=sigma)
+    X_val   = pre_process_images(X_val, mean=mu, std=sigma)    
+    X_test  = pre_process_images(X_test, mean=mu, std=sigma)    
 
     # Hyperparameters
     num_epochs = 20
@@ -89,6 +116,11 @@ if __name__ == "__main__":
         neurons_per_layer,
         use_improved_sigmoid,
         use_improved_weight_init)
+
+    # Initial the weight to randomly sampled weights between [-1, 1]
+    for layer_idx, w in enumerate(model.ws):
+        model.ws[layer_idx] = np.random.uniform(-1, 1, size=w.shape)
+    
     model, train_loss, val_loss, train_accuracy, val_accuracy = train(
         model,
         [X_train, Y_train, X_val, Y_val, X_test, Y_test],

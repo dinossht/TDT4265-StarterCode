@@ -15,17 +15,19 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     ce = targets * np.log(outputs)
-    raise NotImplementedError
+    N = targets.shape[0] 
+    K = targets.shape[1]  
+    return (-1.0/(N*K))*np.sum(np.sum(ce)) 
 
 
 class SoftmaxModel:
 
     def __init__(self, l2_reg_lambda: float):
         # Define number of input nodes
-        self.I = None
+        self.I = 785
 
         # Define number of output nodes
-        self.num_outputs = None
+        self.num_outputs = 10
         self.w = np.zeros((self.I, self.num_outputs))
         self.grad = None
 
@@ -38,7 +40,8 @@ class SoftmaxModel:
         Returns:
             y: output of model with shape [batch size, num_outputs]
         """
-        return None
+        # Equation 6 from assignment
+        return np.exp(X@self.w)/np.sum(np.exp(X@self.w),axis=1,keepdims=True) 
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -49,7 +52,11 @@ class SoftmaxModel:
         """
         assert targets.shape == outputs.shape,\
             f"Output shape: {outputs.shape}, targets: {targets.shape}"
-        self.grad = np.zeros_like(self.w)
+
+        # Equation 9 from assignment
+        N = targets.shape[0]
+        K = targets.shape[1]
+        self.grad = (-1.0/(K*N))*X.T@(targets-outputs)+self.l2_reg_lambda*2*self.w
         assert self.grad.shape == self.w.shape,\
              f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
 
@@ -65,7 +72,10 @@ def one_hot_encode(Y: np.ndarray, num_classes: int):
     Returns:
         Y: shape [Num examples, num classes]
     """
-    raise NotImplementedError
+    encoded_Y = np.zeros((len(Y),num_classes))  
+    for i in range(len(Y)):
+        encoded_Y[i,int(Y[i])] = 1
+    return encoded_Y
 
 
 def gradient_approximation_test(model: SoftmaxModel, X: np.ndarray, Y: np.ndarray):

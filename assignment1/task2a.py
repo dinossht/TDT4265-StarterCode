@@ -12,7 +12,10 @@ def pre_process_images(X: np.ndarray):
     """
     assert X.shape[1] == 784,\
         f"X.shape[1]: {X.shape[1]}, should be 784"
-    return X
+
+    # Normalize from [0,255] to [0,1]
+    # Append 1 at the end (bias trick)
+    return np.append(X/255.0,np.ones((X.shape[0],1)),axis=1)
 
 
 def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
@@ -25,14 +28,17 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
     """
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
-    return 0
+    
+    # Equation 3 from assignment
+    N = targets.shape[0]   
+    return (-1.0/N)*((targets.T@np.log(outputs))+((1.0-targets.T)@np.log(1.0-outputs)))
 
 
 class BinaryModel:
 
     def __init__(self, l2_reg_lambda: float):
         # Define number of input nodes
-        self.I = None
+        self.I = 785
         self.w = np.zeros((self.I, 1))
         self.grad = None
 
@@ -46,8 +52,8 @@ class BinaryModel:
         Returns:
             y: output of model with shape [batch size, 1]
         """
-        # Sigmoid
-        return None
+        # Sigmoid, equation 1 from assignment
+        return 1.0/(1.0+np.exp(-X@self.w))
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -58,9 +64,18 @@ class BinaryModel:
         """
         assert targets.shape == outputs.shape,\
             f"Output shape: {outputs.shape}, targets: {targets.shape}"
-        self.grad = np.zeros_like(self.w)
+
+        # Equation 4 from assignment for single layer NN
+        # outputs: y_hat
+        # targets/labels: y
+        # input: x
+        # dim(grad) = dim(w) = 785
+        N = targets.shape[0]
+        self.grad = -(1.0/N)*X.T@(targets-outputs)+self.l2_reg_lambda*2*self.w 
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
+        
+ 
 
     def zero_grad(self) -> None:
         self.grad = None

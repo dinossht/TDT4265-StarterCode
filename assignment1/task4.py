@@ -15,9 +15,13 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: SoftmaxModel) 
     Returns:
         Accuracy (float)
     """
-    accuracy = 0
-    return accuracy
+    # Task 4c
+    tot_preds = X.shape[0]  # total number of predictions
+    currectly_predicted = np.sum(np.argmax(model.forward(X),1)==np.argmax(targets,1)) 
+    accuracy = currectly_predicted/tot_preds 
+    return accuracy  
 
+# find index of 
 
 def train(
         num_epochs: int,
@@ -45,15 +49,17 @@ def train(
             end = start + batch_size
             X_batch, Y_batch = X_train[start:end], Y_train[start:end]
 
-            _train_loss = 0
-            train_loss[global_step] = _train_loss
+            # The mini-batch gradient descent algorithm for m batches and a single epoch. 
+            model.backward(X_batch,model.forward(X_batch),Y_batch)
+            model.w = model.w-learning_rate*model.grad
             
             # Track training loss continuously
-            _train_loss = 0
+            _train_loss = cross_entropy_loss(Y_batch,model.forward(X_batch))
             train_loss[global_step] = _train_loss
+
             # Track validation loss / accuracy every time we progress 20% through the dataset
             if global_step % num_steps_per_val == 0:
-                _val_loss = 0
+                _val_loss = cross_entropy_loss(Y_val,model.forward(X_val))
                 val_loss[global_step] = _val_loss
 
                 train_accuracy[global_step] = calculate_accuracy(
@@ -70,6 +76,15 @@ validation_percentage = 0.1
 X_train, Y_train, X_val, Y_val, X_test, Y_test = utils.load_full_mnist(
     validation_percentage)
 
+# One hot encoding
+Y_train = one_hot_encode(Y_train,10)
+Y_test  = one_hot_encode(Y_test,10)
+Y_val   = one_hot_encode(Y_val,10)
+
+# Preprocess dataset
+X_train = pre_process_images(X_train)    
+X_test  = pre_process_images(X_test)
+X_val   = pre_process_images(X_val)
 
 # Hyperparameters
 num_epochs = 50
@@ -97,7 +112,7 @@ print("Final Test accuracy:", calculate_accuracy(X_test, Y_test, model))
 
 
 # Plot loss
-#plt.ylim([0.01, .2])
+plt.ylim([0.01, .2])
 utils.plot_loss(train_loss, "Training Loss")
 utils.plot_loss(val_loss, "Validation Loss")
 plt.legend()
@@ -106,8 +121,31 @@ plt.show()
 
 
 # Plot accuracy
-#plt.ylim([0.8, .95])
+plt.ylim([0.8, .95])
 utils.plot_loss(train_accuracy, "Training Accuracy")
 utils.plot_loss(val_accuracy, "Validation Accuracy")
 plt.legend()
+plt.savefig("softmax_train_accuracy.png")
 plt.show()
+
+# Loop through different lamda values
+lamda = [0, 0.1]
+f = plt.figure(figsize=(10,2))
+for i in range(2):
+    l2_reg_lambda = lamda[i]  
+    model, train_loss, val_loss, train_accuracy, val_accuracy = train(
+        num_epochs=num_epochs,
+        learning_rate=learning_rate,
+        batch_size=batch_size,
+        l2_reg_lambda=l2_reg_lambda)
+
+    print("Validation accuracy:", calculate_accuracy(X_val, Y_val, model))
+
+    for j in range(10):
+        ax = f.add_subplot(2,10,10*i+j+1)
+        # Reshape weights to image 2 d)
+        ax.imshow(np.reshape(np.array(model.w[0:28**2,j]),(28,28)),cmap='gray')
+
+plt.tight_layout()
+plt.savefig('softmax_weight.png')
+plt.show()        
