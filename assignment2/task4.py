@@ -154,6 +154,7 @@ if __name__ == "__main__":
             #use_momentum = True
             # task 4a,b)
             #neurons_per_layer[0] = 128
+            # task 4c,d)
             neurons_per_layer = [64, 64, 10]
 
         model = SoftmaxModel(
