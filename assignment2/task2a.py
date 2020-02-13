@@ -124,33 +124,49 @@ class SoftmaxModel:
         self.grads = []
         w1 = self.ws[0]
         w2 = self.ws[1]
-        w3 = self.ws[2]
         
         N = targets.shape[0]        
         
-        # Output layer backpropogation
-        delta_l = -(targets - outputs)
+        if len(self.neurons_per_layer) == 3:
+            w3 = self.ws[2]
+            # Output layer backpropogation
+            delta_l = -(targets - outputs)
 
-        z_j = X@w1
-        a_j = sigmoid(z_j, improved_sigmoid=self.use_improved_sigmoid)
-        
-        z_k = a_j@w2
-        a_k = sigmoid(z_k, improved_sigmoid=self.use_improved_sigmoid)
-         
-        dC_dwl = (1.0 / N) * a_k.T@delta_l  
-        
-        # Hidden layer backpropogation
-        delta_k = sigmoid_derivative(z_k, improved_sigmoid=self.use_improved_sigmoid) * (delta_l@w3.T)
-        dC_dwk = (1.0 / N) * a_j.T@delta_k
+            z_j = X@w1
+            a_j = sigmoid(z_j, improved_sigmoid=self.use_improved_sigmoid)
+            
+            z_k = a_j@w2
+            a_k = sigmoid(z_k, improved_sigmoid=self.use_improved_sigmoid)
+            
+            dC_dwl = (1.0 / N) * a_k.T@delta_l  
+            
+            # Hidden layer backpropogation
+            delta_k = sigmoid_derivative(z_k, improved_sigmoid=self.use_improved_sigmoid) * (delta_l@w3.T)
+            dC_dwk = (1.0 / N) * a_j.T@delta_k
 
-        delta_j = sigmoid_derivative(z_j, improved_sigmoid=self.use_improved_sigmoid) * (delta_k@w2.T)
-        dC_dwj = (1.0 / N) * X.T@delta_j
+            delta_j = sigmoid_derivative(z_j, improved_sigmoid=self.use_improved_sigmoid) * (delta_k@w2.T)
+            dC_dwj = (1.0 / N) * X.T@delta_j
 
-        # Update gradient
-        self.grads.append(dC_dwj)
-        self.grads.append(dC_dwk)
-        self.grads.append(dC_dwl)
+            # Update gradient
+            self.grads.append(dC_dwj)
+            self.grads.append(dC_dwk)
+            self.grads.append(dC_dwl)
 
+        else:   
+            # Output layer backpropogation
+            delta_k = -(targets - outputs)
+            z_j = X@w1
+            a_j = sigmoid(z_j)
+            dC_dw2 = (1.0 / N) * a_j.T@delta_k  
+            
+            # Hidden layer backpropogation
+            delta_j = sigmoid_derivative(z_j) * (delta_k@w2.T)
+            dC_dw1 = (1.0 / N) * X.T@delta_j 
+
+            # Update gradient
+            self.grads.append(dC_dw1)
+            self.grads.append(dC_dw2)
+            
         for grad, w in zip(self.grads, self.ws):
             assert grad.shape == w.shape,\
                 f"Expected the same shape. Grad shape: {grad.shape}, w: {w.shape}."
