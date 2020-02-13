@@ -143,7 +143,7 @@ if __name__ == "__main__":
         use_improved_weight_init    = True
         use_momentum                = True
 
-        #if run == 1:
+        if run == 1:
             # task 3a)    
             #use_shuffle = True
             # task 3b)
@@ -154,7 +154,8 @@ if __name__ == "__main__":
             #use_momentum = True
             # task 4a,b)
             #neurons_per_layer[0] = 128
-        
+            neurons_per_layer = [64, 64, 10]
+
         model = SoftmaxModel(
             neurons_per_layer,
             use_improved_sigmoid,
@@ -209,7 +210,7 @@ if __name__ == "__main__":
 
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Cross Entropy Loss")
-    plt.legend(["Training Loss with 64 hidden neurons", "Validation Loss with 64 hidden neurons", "Training Loss with 128 hidden neurons", "Validation Loss with 128 hidden neurons"])
+    plt.legend(["Training Loss with 1 hidden layer", "Validation Loss with 1 hidden layer", "Training Loss with 2 hidden layers", "Validation Loss with 2 hidden layers"])
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
@@ -223,7 +224,7 @@ if __name__ == "__main__":
         loss = list(val_accuracy_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
 
-    plt.legend(["Training Accuracy with 64 hidden neurons", "Validation Accuracy with 64 hidden neurons", "Training Accuracy with 128 hidden neurons", "Validation Accuracy with 128 hidden neurons"])
+    plt.legend(["Training Accuracy with 1 hidden layer", "Validation Accuracy with 1 hidden layer", "Training Accuracy with 2 hidden layers", "Validation Accuracy with 2 hidden layers"])
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Accuracy")
     
