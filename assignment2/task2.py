@@ -2,7 +2,7 @@ import numpy as np
 import utils
 import matplotlib.pyplot as plt
 import typing
-from task2a import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
+from task2a_v2 import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
 np.random.seed(0)
 
 # TODO: Early stopping in the training loop. This is not required; 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     model = SoftmaxModel(
         neurons_per_layer,
         use_improved_sigmoid,
-        use_improved_weight_init)
+        use_improved_weight_init,[])
 
     # Initial the weight to randomly sampled weights between [-1, 1]
     for layer_idx, w in enumerate(model.ws):
