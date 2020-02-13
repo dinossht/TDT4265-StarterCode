@@ -21,7 +21,7 @@ def improved_sigmoid_derivative(X: np.ndarray, w: np.ndarray):
     return 1.7159*(2/3)*(1-np.tanh(z)**2)
 
 
-def pre_process_images(X: np.ndarray):
+def pre_process_images(X: np.ndarray, mean=128, std=50):
     """
     Args:
         X: images of shape [batch size, 784] in the range (0, 255)
@@ -30,18 +30,13 @@ def pre_process_images(X: np.ndarray):
     """
     assert X.shape[1] == 784,\
         f"X.shape[1]: {X.shape[1]}, should be 784"
-    
-    #Normalizing input
-    mu = np.mean(X)
-    sigma = np.std(X)
-    X = (X-mu)/sigma
-
-    #creating output
-    Xout = np.zeros((X.shape[0],X.shape[1]+1))
-    Xout[:,0:X.shape[1]] = X
-    Xout[:,X.shape[1]] = 1
-
-    return Xout
+    # Input normalization
+    # Normalize using mean and standard deviation 
+    mu      = mean
+    sigma   = std 
+    X_norm  = (X - mu) / sigma
+    # Append 1 at the end (bias trick)
+    return np.append(X_norm, np.ones((X.shape[0], 1)), axis=1)
 
 
 def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):

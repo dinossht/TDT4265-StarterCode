@@ -2,7 +2,7 @@ import numpy as np
 import utils
 import matplotlib.pyplot as plt
 import typing
-from task2a import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
+from task2a_v2 import cross_entropy_loss, SoftmaxModel, one_hot_encode, pre_process_images
 from sklearn.utils import shuffle
 np.random.seed(0)
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
         model = SoftmaxModel(
             neurons_per_layer,
             use_improved_sigmoid,
-            use_improved_weight_init)
+            use_improved_weight_init, [])
         
         model, train_loss, val_loss, train_accuracy, val_accuracy = train(
             model,
