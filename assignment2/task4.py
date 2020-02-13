@@ -53,7 +53,7 @@ def train(
 
     # Initialize delta weights for momentum based learning rate update
     num_layers = len(model.neurons_per_layer)
-    delta = num_layers * [None]
+    delta =num_layers * [0]
 
     global_step = 0
     for epoch in range(num_epochs):
