@@ -138,10 +138,10 @@ if __name__ == "__main__":
         print("Run:", run)
         
         # Settings for task 3. Keep all to false for task 2.
-        use_shuffle                 = False
-        use_improved_sigmoid        = False
-        use_improved_weight_init    = False
-        use_momentum                = False
+        use_shuffle                 = True
+        use_improved_sigmoid        = True
+        use_improved_weight_init    = True
+        use_momentum                = True
 
         #if run == 1:
             # task 3a)    
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Cross Entropy Loss")
-    plt.legend(["Training Loss", "Validation Loss", "Training Loss with momentum", "Validation Loss with momentum"])
+    plt.legend(["Training Loss with 64 hidden neurons", "Validation Loss with 64 hidden neurons", "Training Loss with 128 hidden neurons", "Validation Loss with 128 hidden neurons"])
     
     # Plot accuracy
     plt.subplot(1, 2, 2)
@@ -223,7 +223,7 @@ if __name__ == "__main__":
         loss = list(val_accuracy_all[run].values())
         plt.plot(global_steps, loss, fmt[run])
 
-    plt.legend(["Training Accuracy", "Validation Accuracy", "Training Accuracy with momentum", "Validation Accuracy with momentum"])
+    plt.legend(["Training Accuracy with 64 hidden neurons", "Validation Accuracy with 64 hidden neurons", "Training Accuracy with 128 hidden neurons", "Validation Accuracy with 128 hidden neurons"])
     plt.xlabel("Number of gradient steps")
     plt.ylabel("Accuracy")
     
