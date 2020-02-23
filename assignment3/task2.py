@@ -131,7 +131,13 @@ class ExampleModel(nn.Module):
             x: Input image, shape: [batch_size, 3, 32, 32]
         """
         batch_size = x.shape[0]
+        
         out = x
+        # Pass through feature extractor first
+        out = self.feature_extractor(out)
+        # Pass then through fully connected network
+        out = self.classifier(out)
+
         expected_shape = (batch_size, self.num_classes)
         assert out.shape == (batch_size, self.num_classes),\
             f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
