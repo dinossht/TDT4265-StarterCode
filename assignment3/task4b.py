@@ -68,5 +68,9 @@ for index in range(0, len(indices)):
     plt.title('%s %d' % ("Greyscale Activation nr:", (desired_image)))
     plt.imshow(activation_image, cmap="gray")
 
-plt.savefig("weight_and_activationImages")
+manager = plt.get_current_fig_manager()
+manager.window.showMaximized()
+
+fig = plt.figure(1)
 plt.show()
+fig.savefig("weight_and_activationImages")
