@@ -252,7 +252,7 @@ if __name__ == "__main__":
     learning_rate = 5e-2
     early_stop_count = 4
     dataloaders = load_cifar10(batch_size)
-    model = ExampleModel(image_channels=3, num_classes=10)
+    model = ExampleModel()
     trainer = Trainer(
         batch_size,
         learning_rate,
