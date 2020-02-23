@@ -26,16 +26,32 @@ def compute_loss_and_accuracy(
     average_loss = 0
     accuracy = 0
 
+    correct_predicts = 0
+    total_predicts = 0
+    loss_sum = 0
+    N = 0
+
     with torch.no_grad():
         for (X_batch, Y_batch) in dataloader:
             # Transfer images/labels to GPU VRAM, if possible
             X_batch = utils.to_cuda(X_batch)
             Y_batch = utils.to_cuda(Y_batch)
             # Forward pass the images through our model
-            output_probs = model(X_batch)
+            output_probs = model.forward(X_batch)  # bug in starter-code? only said model(X_batch)
 
             # Compute Loss and Accuracy
 
+            # Calculate accuracy
+            _, predicted = torch.max(output_probs, 1)
+            total_predicts += Y_batch.size(0)
+            correct_predicts += (predicted==Y_batch).sum().item()
+
+            # Calculate average loss
+            N += 1
+            loss_sum += loss_criterion(output_probs, Y_batch)  # here Y_batch needs to be in same dim as output_probs
+
+    average_loss = loss_sum / N
+    accuracy = correct_predicts / total_predicts
     return average_loss, accuracy
 
 
