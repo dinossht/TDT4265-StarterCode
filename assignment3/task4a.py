@@ -7,7 +7,7 @@ import typing
 import collections
 import torchvision
 from torch import nn
-from dataloaders import load_cifar10
+from dataloaders_task4 import load_cifar10
 
 
 def compute_loss_and_accuracy(
@@ -117,6 +117,7 @@ class Trainer:
         self.TRAIN_LOSS = collections.OrderedDict()
         self.VALIDATION_ACC = collections.OrderedDict()
         self.TEST_ACC = collections.OrderedDict()
+        self.TRAIN_ACC = collections.OrderedDict()
 
         self.checkpoint_dir = pathlib.Path("checkpoints")
 
@@ -145,7 +146,27 @@ class Trainer:
         )
         self.TEST_ACC[self.global_step] = test_acc
         self.TEST_LOSS[self.global_step] = test_loss
-
+        print(
+            f"Epoch: {self.epoch:>2}",
+            f"Batches per seconds: {self.global_step / used_time:.2f}",
+            f"Global step: {self.global_step:>6}",
+            f"Test Loss: {test_loss:.2f},",
+            f"Test Accuracy: {test_acc:.3f}",
+            sep="\t")
+            
+        # Compute for training set
+        train_loss, train_acc = compute_loss_and_accuracy(
+            self.dataloader_train, self.model, self.loss_criterion
+        )
+        self.TRAIN_ACC[self.global_step] = train_acc
+        self.TRAIN_LOSS[self.global_step] = train_loss
+        print(
+            f"Epoch: {self.epoch:>2}",
+            f"Batches per seconds: {self.global_step / used_time:.2f}",
+            f"Global step: {self.global_step:>6}",
+            f"Train Loss: {train_loss:.2f},",
+            f"Train Accuracy: {train_acc:.3f}",
+            sep="\t")
         self.model.train()
 
     def should_early_stop(self):
