@@ -247,9 +247,9 @@ def create_plots(trainer: Trainer, name: str):
 
 
 if __name__ == "__main__":
-    epochs = 10
-    batch_size = 64
-    learning_rate = 5e-2
+    epochs = 5
+    batch_size = 32
+    learning_rate = 5e-4
     early_stop_count = 4
     dataloaders = load_cifar10(batch_size)
     model = ExampleModel()
