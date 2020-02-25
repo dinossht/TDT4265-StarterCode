@@ -86,8 +86,8 @@ fig.savefig("weight_and_activationImages")
 last_conv_layer = nn.Sequential(*list(model.children())[:-2])
 #print("Last conv layer:", last_conv_layer)
 
-#activation = last_conv_layer.forward(image)
-activation = last_conv_layer[0](image)
+activation = last_conv_layer.forward(image)
+#activation = last_conv_layer[0](image)
 
 for index in range(10):
     # weights have the dim (image,3,7,7); meaning (image,:,:,:) is what we want out. PS: need to convert
