@@ -80,14 +80,14 @@ fig.savefig("weight_and_activationImages")
 ###########
 # Task 4c #
 ###########
+# Passing the image through all the modules returned 
+# by model.children(), except the last two. This will 
+# return the activation from the last convolutional layer
 last_conv_layer = nn.Sequential(*list(model.children())[:-2])
-print(last_conv_layer)
-print("Last conv layer:", last_conv_layer)
-
+#print("Last conv layer:", last_conv_layer)
 activation = last_conv_layer.forward(image)
 
 for index in range(10):
-
     # greyscaled activation shape dim (1,512,7,7)
     activation_image = torch_image_to_numpy(activation[0, index, :, :])
     plt.subplot(2, 5, index + 1)
