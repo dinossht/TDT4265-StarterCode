@@ -4,6 +4,7 @@ from PIL import Image
 import torchvision
 import torch
 import numpy as np
+from torch import nn
 image = Image.open("images/zebra.jpg")
 print("Image shape:", image.size)
 
@@ -74,3 +75,29 @@ manager.window.showMaximized()
 fig = plt.figure(1)
 plt.show()
 fig.savefig("weight_and_activationImages")
+
+
+###########
+# Task 4c #
+###########
+last_conv_layer = nn.Sequential(*list(model.children())[:-2])
+print(last_conv_layer)
+print("Last conv layer:", last_conv_layer)
+
+activation = last_conv_layer.forward(image)
+
+for index in range(10):
+
+    # greyscaled activation shape dim (1,512,7,7)
+    activation_image = torch_image_to_numpy(activation[0, index, :, :])
+    plt.subplot(2, 5, index + 1)
+    plt.title('%s %d' % ("Filter nr:", (index + 1)))
+    plt.imshow(activation_image, cmap="gray")
+
+manager = plt.get_current_fig_manager()
+manager.window.showMaximized()
+
+fig = plt.figure(1)
+plt.show()
+fig.savefig("task4c_activation_image")
+
