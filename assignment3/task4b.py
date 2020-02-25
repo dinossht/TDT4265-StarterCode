@@ -85,7 +85,26 @@ fig.savefig("weight_and_activationImages")
 # return the activation from the last convolutional layer
 last_conv_layer = nn.Sequential(*list(model.children())[:-2])
 #print("Last conv layer:", last_conv_layer)
-activation = last_conv_layer.forward(image)
+
+#activation = last_conv_layer.forward(image)
+activation = last_conv_layer[0](image)
+
+for index in range(10):
+    # weights have the dim (image,3,7,7); meaning (image,:,:,:) is what we want out. PS: need to convert
+    kernel_weight_image = torch_image_to_numpy(
+    last_conv_layer[0].weight[index, :, :, :])
+    print(kernel_weight_image.shape)
+    plt.subplot(2, 5, index + 1)
+    plt.title('%s %d' % ("Weights of Kernel nr:", (index + 1)))
+    plt.imshow(kernel_weight_image)
+
+manager = plt.get_current_fig_manager()
+manager.window.showMaximized()
+
+fig = plt.figure(1)
+plt.show()
+fig.savefig("task4c_weights")
+
 
 for index in range(10):
     # greyscaled activation shape dim (1,512,7,7)
