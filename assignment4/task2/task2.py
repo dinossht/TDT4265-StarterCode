@@ -17,12 +17,25 @@ def calculate_iou(prediction_box, gt_box):
         returns:
             float: value of the intersection of union for the two boxes.
     """
-    # YOUR CODE HERE
+	# Determine the (x, y)-coordinates of the intersection
+    x_A = max(prediction_box[0], gt_box[0])
+    y_A = max(prediction_box[1], gt_box[1])
+    x_B = min(prediction_box[2], gt_box[2])
+    y_B = min(prediction_box[3], gt_box[3])
 
     # Compute intersection
-
+    inter_area = max(0, x_B - x_A) * max(0, y_B - y_A)
+    
+    # Compute the area of both the prediction and ground-truth rectangles
+    prediction_area = (prediction_box[2] - prediction_box[0]) * (prediction_box[3] - prediction_box[1])
+    gt_area = (gt_box[2] - gt_box[0]) * (gt_box[3] - gt_box[1])
+	
     # Compute union
-    iou = 0
+    union_area = prediction_area + gt_area - inter_area
+
+    # Compute the intersection over union by taking the intersection
+    iou = inter_area / float(union_area)
+
     assert iou >= 0 and iou <= 1
     return iou
 
