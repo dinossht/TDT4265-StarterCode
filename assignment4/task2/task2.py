@@ -94,15 +94,28 @@ def get_all_box_matches(prediction_boxes, gt_boxes, iou_threshold):
             Each row includes [xmin, xmax, ymin, ymax]
     """
     # Find all possible matches with a IoU >= iou threshold
-
-
     # Sort all matches on IoU in descending order
-
     # Find all matches with the highest IoU threshold
 
-
+    matched_pred_boxes = []
+    matched_gt_boxes = []
     
-    return np.array([]), np.array([])
+    for gt_box in gt_boxes:
+        best_iou = 0
+        best_pred_box = None
+        
+        # Find valid and best matching
+        for prediction_box in prediction_boxes:
+            iou = calculate_iou(prediction_box, gt_box)
+            if iou >= iou_threshold and iou > best_iou:
+                best_pred_box = prediction_box
+                best_iou = iou
+    
+        if best_pred_box is not None:
+            matched_pred_boxes.append(best_pred_box)
+            matched_gt_boxes.append(gt_box)
+
+    return np.array(matched_pred_boxes), np.array(matched_gt_boxes)
 
 
 def calculate_individual_image_result(prediction_boxes, gt_boxes, iou_threshold):
