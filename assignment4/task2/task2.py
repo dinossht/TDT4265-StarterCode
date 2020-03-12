@@ -5,7 +5,7 @@ import copy
 from tools import read_predicted_boxes, read_ground_truth_boxes
 
 
-# Test git-Dino
+# Test git-kyrre ikke endre dette
 
 def calculate_iou(prediction_box, gt_box):
     """Calculate intersection over union of single predicted and ground truth box.
