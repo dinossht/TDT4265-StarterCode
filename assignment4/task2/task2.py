@@ -95,6 +95,8 @@ def get_all_box_matches(prediction_boxes, gt_boxes, iou_threshold):
             objects with shape: [number of box matches, 4].
             Each row includes [xmin, xmax, ymin, ymax]
     """
+    # NOTE: NB! Two different ground truths can be matched with the same prediction with this implementation
+
     # Find all possible matches with a IoU >= iou threshold
     # Sort all matches on IoU in descending order
     # Find all matches with the highest IoU threshold
@@ -138,7 +140,15 @@ def calculate_individual_image_result(prediction_boxes, gt_boxes, iou_threshold)
             {"true_pos": int, "false_pos": int, false_neg": int}
     """
 
-    raise NotImplementedError
+    # Finds all possible matches for the predicted boxes to the ground truth boxes
+    matched_pred, matched_gt = get_all_box_matches(prediction_boxes, gt_boxes, iou_threshold)
+    
+    # Compute TP, FP and FN
+    num_TP = matched_pred.shape[0]
+    num_FP = prediction_boxes.shape[0] - num_TP
+    num_FN = gt_boxes.shape[0] - num_TP
+    
+    return  {"true_pos": num_TP, "false_pos": num_FP, "false_neg": num_FN}
 
 
 def calculate_precision_recall_all_images(
@@ -160,7 +170,20 @@ def calculate_precision_recall_all_images(
     Returns:
         tuple: (precision, recall). Both float.
     """
-    raise NotImplementedError
+    num_TP = 0
+    num_FP = 0
+    num_FN = 0
+
+    for pred_boxes, gt_boxes in zip(all_prediction_boxes, all_gt_boxes):
+        individual_results = calculate_individual_image_result(pred_boxes, gt_boxes, iou_threshold) 
+        num_TP += individual_results["true_pos"]
+        num_FP += individual_results["false_pos"]
+        num_FN += individual_results["false_neg"]
+
+    precision = calculate_precision(num_TP, num_FP, num_FN)
+    recall = calculate_recall(num_TP, num_FP, num_FN)
+
+    return (precision, recall)
 
 
 def get_precision_recall_curve(
@@ -193,6 +216,8 @@ def get_precision_recall_curve(
     # curve, we will use an approximation
     confidence_thresholds = np.linspace(0, 1, 500)
     # YOUR CODE HERE
+
+
 
     precisions = [] 
     recalls = []
