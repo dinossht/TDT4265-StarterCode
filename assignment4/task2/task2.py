@@ -172,7 +172,7 @@ def calculate_precision_recall_all_images(
     num_FP = 0
     num_FN = 0
 
-    # Loop through alle images and calculate precision and recall 
+    # Loop through all images and calculate precision and recall 
     for pred_boxes, gt_boxes in zip(all_prediction_boxes, all_gt_boxes):
         individual_results = calculate_individual_image_result(pred_boxes, gt_boxes, iou_threshold) 
         num_TP += individual_results["true_pos"]
@@ -226,11 +226,17 @@ def get_precision_recall_curve(
                 if confidence_scores[img_num][box_num] >= c_t:
                     predictions.append(pred_box)
 
+            # Convert list to numpy array
             predictions = np.array(predictions)      
+            
             img_pred_array.append(predictions)
-      
-        precision_and_recall = calculate_precision_recall_all_images(np.array(img_pred_array), all_gt_boxes, iou_threshold)
         
+        # Convert list to numpy array
+        img_pred_array = np.array(img_pred_array) 
+
+        precision_and_recall = calculate_precision_recall_all_images(img_pred_array, all_gt_boxes, iou_threshold)
+
+        # Add precision and recall        
         precision.append(precision_and_recall[0])
         recall.append(precision_and_recall[1])
       
