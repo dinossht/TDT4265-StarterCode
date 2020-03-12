@@ -70,7 +70,7 @@ def main():
         logger.info(config_str)
     logger.info("Running with config:\n{}".format(cfg))
 
-    model = start_train(cfg, args)
+    model = start_train(cfg)
 
     logger.info('Start evaluating...')
     torch.cuda.empty_cache()  # speed up evaluating after training finished
