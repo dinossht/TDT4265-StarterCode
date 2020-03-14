@@ -274,7 +274,6 @@ def calculate_mean_average_precision(precisions, recalls):
         float: mean average precision
     """
     # Calculate the mean average precision given these recall levels.
-    # Calculate the mean average precision given these recall levels.
     # DO NOT CHANGE. If you change this, the tests will not pass when we run the final
     # evaluation
     recall_levels = np.linspace(0, 1.0, 11)
