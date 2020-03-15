@@ -32,50 +32,62 @@ class BasicModel(torch.nn.Module):
         #NOTE: control that output_feature_size is correct
         self.feature_extractor_0 = nn.Sequential(
             nn.Conv2d(image_channels, 32,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(32),
             nn.MaxPool2d(2,2),
             nn.ReLU(),
             
             nn.Conv2d(32, 64,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(64),
             nn.MaxPool2d(2,2),
             nn.ReLU(),
             
             nn.Conv2d(64, 64,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
             
             #Extract this to out_feature[0]
             nn.Conv2d(64, self.output_channels[0],kernel_size = 3,stride = 2,padding = 1,bias = True),
+            nn.BatchNorm2d(self.output_channels[0]),
         )
         
         #Feature Extractor 1:
         self.feature_extractor_1 = nn.Sequential(
             nn.ReLU(),
             nn.Conv2d(self.output_channels[0], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Conv2d(128, self.output_channels[1],kernel_size = 3,stride = 2,padding = 1,bias = True),
+            nn.BatchNorm2d(self.output_channels[1]),
         )
         
         #Feature Extractor 2:
         self.feature_extractor_2 = nn.Sequential(
             nn.ReLU(),
             nn.Conv2d(self.output_channels[1], 256,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
             nn.Conv2d(256, self.output_channels[2],kernel_size = 3,stride = 2,padding = 1,bias = True),
+            nn.BatchNorm2d(self.output_channels[2]),
         )
         
         #Feature Extractor 3:
         self.feature_extractor_3 = nn.Sequential(
             nn.ReLU(),
             nn.Conv2d(self.output_channels[2], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Conv2d(128, self.output_channels[3],kernel_size = 3,stride = 2,padding = 1,bias = True),
+            nn.BatchNorm2d(self.output_channels[3]),
         )
         
         #Feature Extractor 4:
         self.feature_extractor_4 = nn.Sequential(
             nn.ReLU(),
             nn.Conv2d(self.output_channels[3], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Conv2d(128, self.output_channels[4],kernel_size = 3,stride = 2,padding = 1,bias = True),
+            nn.BatchNorm2d(self.output_channels[4]),
         )
         
         #Feature Extractor 5:
@@ -84,6 +96,7 @@ class BasicModel(torch.nn.Module):
             nn.Conv2d(self.output_channels[4], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
             nn.Conv2d(128, self.output_channels[5],kernel_size = 3,stride = 1,padding = 0,bias = True),
+            nn.BatchNorm2d(self.output_channels[5]),
         )
     
     
