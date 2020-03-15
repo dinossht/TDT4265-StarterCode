@@ -26,24 +26,24 @@ class BasicModel(torch.nn.Module):
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.output_feature_size = cfg.MODEL.PRIORS.FEATURE_MAPS
         
-        #VGG-16
         
         #Added:
         #Feature Extractor 0:
+        #NOTE: control that output_feature_size is correct
         self.feature_extractor_0 = nn.Sequential(
             nn.Conv2d(image_channels, 32,kernel_size = 3,stride = 1,padding = 1,bias = True),
-            nn.Maxpool2d(2,2),
+            nn.MaxPool2d(2,2),
             nn.ReLU(),
             
             nn.Conv2d(32, 64,kernel_size = 3,stride = 1,padding = 1,bias = True),
-            nn.Maxpool2d(2,2),
+            nn.MaxPool2d(2,2),
             nn.ReLU(),
             
             nn.Conv2d(64, 64,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
             
             #Extract this to out_feature[0]
-            out_features.append(nn.Conv2d(64, self.output_channels[0],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+            nn.Conv2d(64, self.output_channels[0],kernel_size = 3,stride = 2,padding = 1,bias = True),
         )
         
         #Feature Extractor 1:
@@ -51,7 +51,7 @@ class BasicModel(torch.nn.Module):
             nn.ReLU(),
             nn.Conv2d(self.output_channels[0], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
-            out_features.append(nn.Conv2d(128, self.output_channels[1],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+            nn.Conv2d(128, self.output_channels[1],kernel_size = 3,stride = 2,padding = 1,bias = True),
         )
         
         #Feature Extractor 2:
@@ -59,7 +59,7 @@ class BasicModel(torch.nn.Module):
             nn.ReLU(),
             nn.Conv2d(self.output_channels[1], 256,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
-            out_features.append(nn.Conv2d(256, self.output_channels[2],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+            nn.Conv2d(256, self.output_channels[2],kernel_size = 3,stride = 2,padding = 1,bias = True),
         )
         
         #Feature Extractor 3:
@@ -67,7 +67,7 @@ class BasicModel(torch.nn.Module):
             nn.ReLU(),
             nn.Conv2d(self.output_channels[2], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
-            out_features.append(nn.Conv2d(128, self.output_channels[3],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+            nn.Conv2d(128, self.output_channels[3],kernel_size = 3,stride = 2,padding = 1,bias = True),
         )
         
         #Feature Extractor 4:
@@ -75,7 +75,7 @@ class BasicModel(torch.nn.Module):
             nn.ReLU(),
             nn.Conv2d(self.output_channels[3], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
-            out_features.append(nn.Conv2d(128, self.output_channels[4],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+            nn.Conv2d(128, self.output_channels[4],kernel_size = 3,stride = 2,padding = 1,bias = True),
         )
         
         #Feature Extractor 5:
@@ -83,7 +83,7 @@ class BasicModel(torch.nn.Module):
             nn.ReLU(),
             nn.Conv2d(self.output_channels[4], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
             nn.ReLU(),
-            out_features.append(nn.Conv2d(128, self.output_channels[5],kernel_size = 3,stride = 1,padding = 0,bias = True)),
+            nn.Conv2d(128, self.output_channels[5],kernel_size = 3,stride = 1,padding = 0,bias = True),
         )
     
     
@@ -95,13 +95,13 @@ class BasicModel(torch.nn.Module):
             shape(-1, output_channels[1], 19, 19),
             shape(-1, output_channels[2], 10, 10),
             shape(-1, output_channels[3], 5, 5),
-            shape(-1, output_channels[3], 3, 3),
-            shape(-1, output_channels[4], 1, 1)]
+            shape(-1, output_channels[4], 3, 3),
+            shape(-1, output_channels[5], 1, 1)]
         We have added assertion tests to check this, iteration through out_features,
         where out_features[0] should have the shape:
             shape(-1, output_channels[0], 38, 38),
         """
-        batch_size = x.shape[0]
+        #batch_size = x.shape[0]
         out_features = []
         out_features.append(self.feature_extractor_0(x))
         out_features.append(self.feature_extractor_1(out_features[0]))
@@ -110,9 +110,9 @@ class BasicModel(torch.nn.Module):
         out_features.append(self.feature_extractor_4(out_features[3]))
         out_features.append(self.feature_extractor_5(out_features[4]))
         
-        
+        actual_feature_map_size = [38,19,10,5,3,1]
         for idx, feature in enumerate(out_features):
-            expected_shape = (out_channel, feature_map_size, feature_map_size)
+            expected_shape = (output_channels[idx], actual_feature_map_size[idx], actual_feature_map_size[idx])
             assert feature.shape[1:] == expected_shape, \
                 f"Expected shape: {expected_shape}, got: {feature.shape[1:]} at output IDX: {idx}"
         return tuple(out_features)
