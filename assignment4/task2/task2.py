@@ -94,7 +94,8 @@ def get_all_box_matches(prediction_boxes, gt_boxes, iou_threshold):
             Each row includes [xmin, xmax, ymin, ymax]
     """
     # NOTE: NB! Two different ground truths can be matched with the same prediction with this implementation
-
+    #       This can be solved by solving the knapsack problem
+    
     # Find all possible matches with a IoU >= iou threshold
     # Sort all matches on IoU in descending order
     # Find all matches with the highest IoU threshold

@@ -1,4 +1,9 @@
 import torch
+from torch import nn
+import numpy as np
+import time
+import typing
+import collections
 
 
 class BasicModel(torch.nn.Module):
@@ -20,6 +25,68 @@ class BasicModel(torch.nn.Module):
         self.output_channels = output_channels
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.output_feature_size = cfg.MODEL.PRIORS.FEATURE_MAPS
+        
+        #VGG-16
+        
+        #Added:
+        #Feature Extractor 0:
+        self.feature_extractor_0 = nn.Sequential(
+            nn.Conv2d(image_channels, 32,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.Maxpool2d(2,2),
+            nn.ReLU(),
+            
+            nn.Conv2d(32, 64,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.Maxpool2d(2,2),
+            nn.ReLU(),
+            
+            nn.Conv2d(64, 64,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.ReLU(),
+            
+            #Extract this to out_feature[0]
+            out_features.append(nn.Conv2d(64, self.output_channels[0],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+        )
+        
+        #Feature Extractor 1:
+        self.feature_extractor_1 = nn.Sequential(
+            nn.ReLU(),
+            nn.Conv2d(self.output_channels[0], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.ReLU(),
+            out_features.append(nn.Conv2d(128, self.output_channels[1],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+        )
+        
+        #Feature Extractor 2:
+        self.feature_extractor_2 = nn.Sequential(
+            nn.ReLU(),
+            nn.Conv2d(self.output_channels[1], 256,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.ReLU(),
+            out_features.append(nn.Conv2d(256, self.output_channels[2],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+        )
+        
+        #Feature Extractor 3:
+        self.feature_extractor_3 = nn.Sequential(
+            nn.ReLU(),
+            nn.Conv2d(self.output_channels[2], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.ReLU(),
+            out_features.append(nn.Conv2d(128, self.output_channels[3],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+        )
+        
+        #Feature Extractor 4:
+        self.feature_extractor_4 = nn.Sequential(
+            nn.ReLU(),
+            nn.Conv2d(self.output_channels[3], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.ReLU(),
+            out_features.append(nn.Conv2d(128, self.output_channels[4],kernel_size = 3,stride = 2,padding = 1,bias = True)),
+        )
+        
+        #Feature Extractor 5:
+        self.feature_extractor_5 = nn.Sequential(
+            nn.ReLU(),
+            nn.Conv2d(self.output_channels[4], 128,kernel_size = 3,stride = 1,padding = 1,bias = True),
+            nn.ReLU(),
+            out_features.append(nn.Conv2d(128, self.output_channels[5],kernel_size = 3,stride = 1,padding = 0,bias = True)),
+        )
+    
+    
     
     def forward(self, x):
         """
@@ -34,7 +101,16 @@ class BasicModel(torch.nn.Module):
         where out_features[0] should have the shape:
             shape(-1, output_channels[0], 38, 38),
         """
+        batch_size = x.shape[0]
         out_features = []
+        out_features.append(self.feature_extractor_0(x))
+        out_features.append(self.feature_extractor_1(out_features[0]))
+        out_features.append(self.feature_extractor_2(out_features[1]))
+        out_features.append(self.feature_extractor_3(out_features[2]))
+        out_features.append(self.feature_extractor_4(out_features[3]))
+        out_features.append(self.feature_extractor_5(out_features[4]))
+        
+        
         for idx, feature in enumerate(out_features):
             expected_shape = (out_channel, feature_map_size, feature_map_size)
             assert feature.shape[1:] == expected_shape, \
