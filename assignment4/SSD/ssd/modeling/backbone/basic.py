@@ -112,7 +112,7 @@ class BasicModel(torch.nn.Module):
         
         actual_feature_map_size = [38,19,10,5,3,1]
         for idx, feature in enumerate(out_features):
-            expected_shape = (output_channels[idx], actual_feature_map_size[idx], actual_feature_map_size[idx])
+            expected_shape = (self.output_channels[idx], actual_feature_map_size[idx], actual_feature_map_size[idx])
             assert feature.shape[1:] == expected_shape, \
                 f"Expected shape: {expected_shape}, got: {feature.shape[1:]} at output IDX: {idx}"
         return tuple(out_features)
