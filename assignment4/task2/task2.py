@@ -1,7 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import json
-import copy
 from tools import read_predicted_boxes, read_ground_truth_boxes
 
 
@@ -210,7 +208,7 @@ def get_precision_recall_curve(
 
             E.g: score[0][1] is the confidence score for a predicted bounding box 1 in image 0.
     Returns:
-        tuple: (precision, recall). Both float.
+        precisions, recalls: two np.ndarray with same shape.
     """
     # Instead of going over every possible confidence score threshold to compute the PR
     # curve, we will use an approximation
