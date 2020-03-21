@@ -109,6 +109,8 @@ def main():
              images_dir=pathlib.Path(args.images_dir),
              output_dir=pathlib.Path(args.images_dir, "result"),
              dataset_type=args.dataset_type)
+    
+    
 
 
 if __name__ == '__main__':
