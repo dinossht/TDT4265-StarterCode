@@ -67,6 +67,7 @@ def run_demo(cfg, ckpt, score_threshold, images_dir: pathlib.Path, output_dir: p
 
         drawn_image = draw_boxes(image, boxes, labels, scores, class_names).astype(np.uint8)
         drawn_images.append(drawn_image)
+        Image.fromarray(drawn_image).save(output_dir / image_name)
     return drawn_images
 
 
