@@ -4,12 +4,15 @@ from ssd.config.path_catlog import DatasetCatalog
 from .voc import VOCDataset
 from .coco import COCODataset
 from .mnist import MNISTDetection
+from .waymo import WaymoDataset
+from .tdt4265 import TDT4265Dataset
 
 _DATASETS = {
     'VOCDataset': VOCDataset,
     'COCODataset': COCODataset,
-    'MNISTDetection': MNISTDetection
-
+    'MNISTDetection': MNISTDetection,
+    'WaymoDataset': WaymoDataset,
+    'TDT4265Dataset': TDT4265Dataset
 }
 
 

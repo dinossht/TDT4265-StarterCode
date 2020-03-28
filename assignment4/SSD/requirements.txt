@@ -4,3 +4,4 @@ opencv-python
 vizer
 tensorboard
 numpy
+moviepy
