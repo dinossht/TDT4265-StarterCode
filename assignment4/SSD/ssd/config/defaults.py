@@ -6,7 +6,7 @@ cfg.MODEL = CN()
 cfg.MODEL.META_ARCHITECTURE = 'SSDDetector'
 # match default boxes to any ground truth with jaccard overlap higher than a threshold (0.5)
 cfg.MODEL.THRESHOLD = 0.5
-cfg.MODEL.NUM_CLASSES = 21
+cfg.MODEL.NUM_CLASSES = 21                          #note: change?
 # Hard negative mining
 cfg.MODEL.NEG_POS_RATIO = 3
 cfg.MODEL.CENTER_VARIANCE = 0.1
